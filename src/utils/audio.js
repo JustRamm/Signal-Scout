@@ -240,6 +240,71 @@ class SoundEngine {
         osc.stop(this.ctx.currentTime + 0.4);
     }
 
+    // Quick footstep tap for stickman running
+    playRunStep() {
+        if (!this.initialized || this.globalPaused) return;
+        const t = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(120, t);
+        osc.frequency.exponentialRampToValueAtTime(60, t + 0.06);
+        gain.gain.setValueAtTime(0.08, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.08);
+        osc.connect(gain);
+        gain.connect(this.masterGain);
+        osc.start(t);
+        osc.stop(t + 0.08);
+    }
+
+    // Whoosh / zoom-out sound when stickman dashes off screen
+    playZoom() {
+        if (!this.initialized || this.globalPaused) return;
+        const t = this.ctx.currentTime;
+        // Noise burst descending — like a fast swoosh
+        const bufferSize = this.ctx.sampleRate * 0.2;
+        const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+
+        const noise = this.ctx.createBufferSource();
+        noise.buffer = buffer;
+
+        const filter = this.ctx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.setValueAtTime(3000, t);
+        filter.frequency.exponentialRampToValueAtTime(200, t + 0.25);
+        filter.Q.value = 0.8;
+
+        const gain = this.ctx.createGain();
+        gain.gain.setValueAtTime(0.15, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+
+        noise.connect(filter);
+        filter.connect(gain);
+        gain.connect(this.masterGain);
+        noise.start(t);
+        noise.stop(t + 0.25);
+    }
+
+    // Failure / game over descending tone
+    playGameOver() {
+        if (!this.initialized || this.globalPaused) return;
+        const t = this.ctx.currentTime;
+        [400, 300, 200, 100].forEach((freq, i) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(freq, t + i * 0.15);
+            gain.gain.setValueAtTime(0.12, t + i * 0.15);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + i * 0.15 + 0.2);
+            osc.connect(gain);
+            gain.connect(this.masterGain);
+            osc.start(t + i * 0.15);
+            osc.stop(t + i * 0.15 + 0.2);
+        });
+    }
+
     // Subtle footstep
     playStep() {
         if (!this.initialized || this.globalPaused) return;

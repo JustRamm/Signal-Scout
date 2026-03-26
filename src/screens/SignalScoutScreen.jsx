@@ -89,13 +89,23 @@ const SignalScoutScreen = ({ audioManager, onExit, isPaused: externalPaused = fa
     };
 
     const handleRatingSubmit = async (rating, userFeedback) => {
-        if (player?.id) {
-            await supabase
-                .from('players')
-                .update({ rating, feedback: userFeedback })
-                .eq('id', player.id);
+        console.log('Saving rating:', { rating, feedback: userFeedback, playerId: player?.id });
+        try {
+            if (player?.id) {
+                const { error } = await supabase
+                    .from('players')
+                    .update({ rating: rating, feedback: userFeedback })
+                    .eq('id', player.id);
+                if (error) console.error('Rating save error:', error);
+                else console.log('Rating saved successfully!');
+            } else {
+                console.warn('No player ID found — rating not persisted to DB.');
+            }
+        } catch (err) {
+            console.error('Unexpected rating save error:', err);
+        } finally {
+            setGameState('INTRO'); // Always return to intro
         }
-        setGameState('INTRO'); // Return to tutorial/splash menu
     };
 
     const togglePause = () => {
@@ -183,19 +193,22 @@ const SignalScoutScreen = ({ audioManager, onExit, isPaused: externalPaused = fa
         return () => clearInterval(spawnTimerRef.current);
     }, [gameState, externalPaused, paused, people.length]);
 
-    // Movement Loop
+    // Movement Loop — also drives ambient running sound
+    const stepCountRef = useRef(0);
     useEffect(() => {
         if (gameState !== 'PLAYING' || externalPaused || paused) return;
 
         const interval = setInterval(() => {
+            stepCountRef.current = (stepCountRef.current + 1) % 18; // every ~288ms
+            const shouldStep = stepCountRef.current === 0;
+
             setPeople(prev => {
+                if (shouldStep && audioManager && prev.some(p => !p.isClicked)) {
+                    audioManager.playRunStep();
+                }
                 return prev.map(p => {
                     const distFromCenter = Math.abs(p.x - 50);
-                    
-                    // If they are leaving (clicked), give them a 20x speed boost to exit instantly
                     const exitBoost = p.isClicked ? 20 : 1;
-                    
-                    // Speed Curve: High at edges, slow at center (only if NOT leaving)
                     const speedMult = p.isClicked ? 1 : (1 + Math.pow(Math.max(0, distFromCenter - 10) / 12, 2.5) * 8);
 
                     return {
@@ -207,15 +220,16 @@ const SignalScoutScreen = ({ audioManager, onExit, isPaused: externalPaused = fa
         }, 16);
 
         return () => clearInterval(interval);
-    }, [gameState, externalPaused, paused]);
+    }, [gameState, externalPaused, paused, audioManager]);
 
 
     // Interaction Logic
     const handlePersonClick = (person) => {
         if (person.isClicked || gameState !== 'PLAYING' || externalPaused || paused) return;
 
-        // Immediately set WHOLE PAIR to clicked/leaving state
+        // Immediately set WHOLE PAIR to clicked/leaving state + zoom sound
         setPeople(prev => prev.map(p => ({ ...p, isClicked: true })));
+        if (audioManager) audioManager.playZoom();
 
         if (person.data.type === 'risk') {
             if (audioManager) audioManager.playDing();
@@ -270,6 +284,7 @@ const SignalScoutScreen = ({ audioManager, onExit, isPaused: externalPaused = fa
                     onExit={onExit}
                     onTogglePause={togglePause}
                     isPaused={paused}
+                    audioManager={audioManager}
                 />
             )}
 

@@ -9,7 +9,8 @@ const GameView = ({
     onPersonClick, 
     onExit, 
     onTogglePause, 
-    isPaused 
+    isPaused,
+    audioManager
 }) => {
     return (
         <div className="flex-1 flex flex-col relative overflow-hidden">
@@ -85,10 +86,10 @@ const GameView = ({
                                     transition-colors duration-200 signal-scout-bubble
                                 `}
                                 style={{ 
-                                    // Move bubble centers slightly more into the screen if character is at the edge
-                                    transform: `translateX(${person.x < 10 ? '10%' : person.x > 90 ? '-10%' : '0%'})`,
-                                    minWidth: '150px',
-                                    maxWidth: '200px'
+                                    transform: `translateX(${person.x < 15 ? '5%' : person.x > 85 ? '-105%' : '-50%'})`,
+                                    minWidth: '130px',
+                                    maxWidth: 'clamp(130px, 40vw, 210px)',
+                                    left: '50%',
                                 }}
                             >
                                 <p className="text-[9.5px] md:text-[11.5px] font-bold leading-tight">{person.data.text}</p>
@@ -110,27 +111,32 @@ const GameView = ({
                     </div>
                 ))}
 
-                {/* Feedback Popup & Score Indicator */}
+                {/* Feedback Popup — fixed center bottom so it never clips on mobile */}
                 {feedback && (
                     <div
-                        className={`absolute z-[200] w-[240px] text-left px-5 py-4 rounded-2xl font-bold shadow-[0_20px_50px_rgba(0,0,0,0.3)] animate-pop-in pointer-events-none border-2 backdrop-blur-xl
-                            ${feedback.type === 'good' ? 'bg-teal-900/40 text-white border-teal-500/50' : 'bg-red-900/40 text-white border-red-500/50'}
+                        className={`absolute z-[200] text-left px-4 py-3 rounded-2xl font-bold shadow-[0_20px_50px_rgba(0,0,0,0.3)] animate-pop-in pointer-events-none border-2 backdrop-blur-xl
+                            ${feedback.type === 'good' ? 'bg-teal-900/70 text-white border-teal-500/50' : 'bg-red-900/70 text-white border-red-500/50'}
                         `}
-                        style={{ left: `${feedback.x}%`, top: `${feedback.y - 20}%`, transform: 'translateX(-50%)' }}
+                        style={{ 
+                            left: '50%',
+                            bottom: '10%',
+                            transform: 'translateX(-50%)',
+                            width: 'clamp(220px, 70vw, 300px)',
+                        }}
                     >
                         {/* Score Float */}
-                        <div className={`absolute -top-12 left-1/2 -translate-x-1/2 text-2xl font-black animate-float-up ${feedback.type === 'good' ? 'text-teal-400' : 'text-red-400'}`}>
+                        <div className={`absolute -top-10 left-1/2 -translate-x-1/2 text-2xl font-black animate-float-up ${feedback.type === 'good' ? 'text-teal-300' : 'text-red-300'}`}>
                             {feedback.score}
                         </div>
 
-                        <div className="flex items-center gap-2 mb-2">
-                            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] ${feedback.type === 'good' ? 'bg-teal-500' : 'bg-red-500'}`}>
-                                {feedback.type === 'good' ? '✓' : '⚠️'}
+                        <div className="flex items-center gap-2 mb-1.5">
+                            <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] flex-shrink-0 ${feedback.type === 'good' ? 'bg-teal-500' : 'bg-red-500'}`}>
+                                {feedback.type === 'good' ? '✓' : '✕'}
                             </div>
-                            <span className="text-[10px] font-black uppercase tracking-widest opacity-70">Analysis</span>
+                            <span className="text-[9px] font-black uppercase tracking-widest opacity-70">Analysis</span>
                         </div>
-                        <h4 className="text-sm font-black mb-1 leading-tight">{feedback.text}</h4>
-                        <p className="text-[10px] font-medium leading-relaxed opacity-80 italic">{feedback.desc}</p>
+                        <h4 className="text-xs font-black mb-1 leading-tight">{feedback.text}</h4>
+                        <p className="text-[9px] font-medium leading-relaxed opacity-80 italic line-clamp-2">{feedback.desc}</p>
                     </div>
                 )}
             </div>
