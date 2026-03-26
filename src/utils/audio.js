@@ -379,7 +379,7 @@ class SoundEngine {
         }
     }
 
-    async playMenuMusic() {
+    async playMenuMusic(offset = 31) {
         if (!this.initialized || this.currentTrack === 'menu') return;
 
         try {
@@ -394,7 +394,7 @@ class SoundEngine {
 
                 source.connect(gain);
                 gain.connect(this.masterGain);
-                source.start();
+                source.start(0, offset);
 
                 // Cross-fade logic: Faster fade for menu entry
                 if (this.musicNodes) {
@@ -473,7 +473,7 @@ class SoundEngine {
 
                 source.connect(gain);
                 gain.connect(this.masterGain);
-                source.start();
+                source.start(0, 31); // Always start from 31s for background track consistency
                 nodes.push({ source, gain });
                 this.musicNodes = nodes;
                 return;
@@ -498,7 +498,7 @@ class SoundEngine {
 
                 source.connect(gain);
                 gain.connect(this.masterGain);
-                source.start();
+                source.start(0, 31);
                 nodes.push({ source, gain });
                 this.musicNodes = nodes;
                 return;

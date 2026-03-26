@@ -26,16 +26,28 @@ const SplashScreen = ({ onStart, audioManager, onLogoClick }) => {
 
     const handleStart = () => {
         if (audioManager) {
-            audioManager.init(); // Initialize audio context on first click
+            audioManager.init();
             audioManager.playConfirm();
+            audioManager.playMenuMusic(31); // Start music at 31s if not already playing
         }
         onStart();
     };
 
+    // Generic interaction handler to start music early if they click anything
+    const handleSplashInteraction = () => {
+        if (audioManager && !audioManager.initialized) {
+            audioManager.init();
+            audioManager.playMenuMusic(31);
+        }
+    };
+
     return (
-        <div className="fixed inset-0 bg-[#020617] flex flex-col items-center justify-center overflow-hidden font-sans">
+        <div 
+            onClick={handleSplashInteraction}
+            className="fixed inset-0 bg-[#020617] flex flex-col items-center justify-center overflow-hidden font-sans cursor-pointer"
+        >
             {/* REAL Game Scenery Background */}
-            <div className="absolute inset-0 z-0 opacity-40">
+            <div className="absolute inset-0 z-0 opacity-40 pointer-events-none">
                 <CitySquareScenery showTrees={false} showLights={false} />
             </div>
 
