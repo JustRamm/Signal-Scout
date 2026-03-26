@@ -15,7 +15,10 @@
       "purpose": "any maskable"
     }
   ],
-  "categories": ["games", "education"],
+  "categories": [
+    "games",
+    "education"
+  ],
   "screenshots": [
     {
       "src": "/brand/1.jpg",
