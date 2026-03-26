@@ -119,8 +119,8 @@ const GameView = ({
                         `}
                         style={{ 
                             left: '50%',
-                            bottom: '10%',
-                            transform: 'translateX(-50%)',
+                            top: '50%',
+                            transform: 'translate(-50%, -50%)',
                             width: 'clamp(220px, 70vw, 300px)',
                         }}
                     >
