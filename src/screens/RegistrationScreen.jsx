@@ -84,7 +84,7 @@ const RegistrationScreen = ({ onRegister, audioManager }) => {
                         <label className="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-2">Full Name</label>
                         <input 
                             type="text"
-                            placeholder="e.g. Abhiram S"
+                            placeholder="e.g. John D"
                             className="w-full px-5 py-3 bg-slate-100 border-none rounded-2xl text-slate-900 font-bold focus:ring-2 focus:ring-orange-400 transition-all outline-none"
                             value={formData.name}
                             onChange={(e) => setFormData({...formData, name: e.target.value})}

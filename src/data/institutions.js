@@ -22,14 +22,16 @@ export const INSTITUTIONS = {
   "Karnataka": {
     "Visvesvaraya Technological University (VTU)": ["RVCE Bangalore", "PES University", "BMSCE Bangalore", "MSRIT", "BIT Bangalore", "Other"],
     "Bangalore University": ["UVCE", "St. Joseph's University", "Mount Carmel College", "Other"],
-    "Manipal Academy": ["KMC Manipal", "MIT Manipal", "Other"]
+    "Manipal Academy": ["KMC Manipal", "MIT Manipal", "Other"],
+    "Amrita Vishwa Vidyapeetham": ["Amrita School of Engineering (Bangalore)", "Amrita School of Business", "Other"]
   },
   "Kerala": {
     "University of Kerala": ["University College Trivandrum", "MG College", "Mar Ivanios College", "Other"],
     "MG University": ["Maharajas College", "St. Berchmans College", "Sacred Heart College", "Other"],
     "APJ Abdul Kalam Technological University (KTU)": ["CET Trivandrum", "TKM Kollam", "GEC Thrissur", "NSS Palakkad", "SCMS", "MA College Kothamangalam", "Other"],
     "Calicut University": ["GEC Kozhikode", "Farook College", "St. Thomas College Thrissur", "Other"],
-    "CUSAT": ["SOE CUSAT", "KMSME CUSAT", "CUCEK Pulincunnoo", "Other"]
+    "CUSAT": ["SOE CUSAT", "KMSME CUSAT", "CUCEK Pulincunnoo", "Other"],
+    "Amrita Vishwa Vidyapeetham": ["Amritapuri Campus (Kollam)", "Amrita School of Arts & Science", "Other"]
   },
   "Maharashtra": {
     "University of Mumbai": ["VJTI Mumbai", "ICT Mumbai", "St. Xavier's Mumbai", "Sophia College", "NM College", "Other"],
@@ -39,7 +41,8 @@ export const INSTITUTIONS = {
   "Tamil Nadu": {
     "Anna University": ["CEG Guindy", "MIT Chromepet", "ACTechenne", "PSG Tech", "Other"],
     "University of Madras": ["Loyola College Chennai", "Madras Christian College", "Presidency College", "Other"],
-    "SRM & VIT": ["VIT Vellore", "SRM Kattankulathur", "SSN College of Engineering", "Other"]
+    "SRM & VIT": ["VIT Vellore", "SRM Kattankulathur", "SSN College of Engineering", "Other"],
+    "Amrita Vishwa Vidyapeetham": ["School of Social & Behavioral Sciences", "Amrita Coimbatore (Ettimadai)", "Amrita School of Engineering", "Other"]
   },
   "Telangana": {
     "Osmania University": ["OU College of Engineering", "Chaitanya Bharathi Institute (CBIT)", "Vasavi College", "Other"],
