@@ -16,7 +16,14 @@
             margin: 0;
             padding: 0;
             overflow: hidden;
-            background: linear-gradient(135deg, hsl(210, 60%, 25%) 0%, hsl(230, 70%, 15%) 100%);
+            /* Game sky: deep indigo → purple → orange horizon */
+            background: linear-gradient(
+                to bottom,
+                hsl(239, 57%, 42%) 0%,
+                hsl(271, 40%, 55%) 40%,
+                hsl(28, 80%, 55%) 85%,
+                hsl(22, 70%, 40%) 100%
+            );
             height: 100vh;
             width: 100vw;
             display: flex;
@@ -25,24 +32,62 @@
             position: relative;
         }
 
-        .hills-container {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 35%;
-            z-index: 1;
-            opacity: 0.5;
+        /* Orange radial glow at the horizon — identical to game */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse at bottom center, rgba(255,120,50,0.38) 0%, transparent 65%);
+            pointer-events: none;
+            z-index: 0;
         }
 
+        /* City building silhouettes */
+        .buildings-layer {
+            position: fixed;
+            bottom: 25%;
+            left: 0;
+            width: 100%;
+            height: 55%;
+            z-index: 1;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            padding: 0 40px;
+            box-sizing: border-box;
+            opacity: 0.55;
+            pointer-events: none;
+        }
+
+        .building-pair {
+            display: flex;
+            align-items: flex-end;
+            gap: 1px;
+        }
+
+        /* Ground — slate like the game's slate-200 ground */
         .ground-layer {
-            position: absolute;
+            position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 12%;
-            background: linear-gradient(rgb(25, 41, 30) 0%, rgb(19, 32, 23) 100%);
+            height: 25%;
+            background: linear-gradient(to top, #e2e8f0 0%, #f1f5f9 60%, rgba(251,146,60,0.18) 100%);
             z-index: 2;
+            box-shadow: inset 0 20px 60px rgba(0,0,0,0.08);
+        }
+
+        /* Horizon glow line */
+        .horizon-glow {
+            position: fixed;
+            bottom: 25%;
+            left: 5%;
+            width: 90%;
+            height: 80px;
+            background: linear-gradient(to top, rgba(251,146,60,0.28), transparent);
+            filter: blur(20px);
+            z-index: 3;
+            pointer-events: none;
         }
 
         .glass-panel {
@@ -127,15 +172,20 @@
 
 <body id="slide-capture">
 
-    <!-- Game Environment Backdrop -->
-    <div class="hills-container">
-        <svg class="absolute bottom-0 w-full h-full" viewBox="0 0 1000 400" preserveAspectRatio="none">
-            <path d="M0,400 L0,300 L150,150 L350,280 L550,100 L800,320 L1000,200 L1000,400 Z"
-                style="fill: rgb(31, 33, 46);"></path>
-            <path d="M0,400 L0,350 L200,220 L450,340 L700,180 L1000,330 L1000,400 Z"
-                style="fill: rgb(37, 41, 62); opacity: 0.8;"></path>
-        </svg>
+    <!-- Game Background Layers -->
+    <!-- City buildings -->
+    <div class="buildings-layer">
+        <div class="building-pair"><div style="width:45px;height:180px;background:#1e293b;border-radius:2px 2px 0 0;"></div><div style="width:70px;height:240px;background:#334155;border-radius:2px 2px 0 0;"></div></div>
+        <div class="building-pair"><div style="width:45px;height:140px;background:#1e293b;border-radius:2px 2px 0 0;"></div><div style="width:70px;height:200px;background:#334155;border-radius:2px 2px 0 0;"></div></div>
+        <div class="building-pair"><div style="width:45px;height:210px;background:#1e293b;border-radius:2px 2px 0 0;"></div><div style="width:70px;height:260px;background:#334155;border-radius:2px 2px 0 0;"></div></div>
+        <div class="building-pair"><div style="width:45px;height:160px;background:#1e293b;border-radius:2px 2px 0 0;"></div><div style="width:70px;height:220px;background:#334155;border-radius:2px 2px 0 0;"></div></div>
+        <div class="building-pair"><div style="width:45px;height:190px;background:#1e293b;border-radius:2px 2px 0 0;"></div><div style="width:70px;height:230px;background:#334155;border-radius:2px 2px 0 0;"></div></div>
+        <div class="building-pair"><div style="width:45px;height:120px;background:#1e293b;border-radius:2px 2px 0 0;"></div><div style="width:70px;height:195px;background:#334155;border-radius:2px 2px 0 0;"></div></div>
+        <div class="building-pair"><div style="width:45px;height:170px;background:#1e293b;border-radius:2px 2px 0 0;"></div><div style="width:70px;height:250px;background:#334155;border-radius:2px 2px 0 0;"></div></div>
     </div>
+    <!-- Horizon glow -->
+    <div class="horizon-glow"></div>
+    <!-- Slate ground -->
     <div class="ground-layer"></div>
 
     <!-- MAIN PRESENTATION PANEL -->
