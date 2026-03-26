@@ -25,7 +25,7 @@ function App() {
   return (
     <div className="w-full h-screen overflow-hidden bg-slate-900 flex items-center justify-center">
       {!gameStarted ? (
-        <SplashScreen onStart={handleStart} />
+        <SplashScreen onStart={handleStart} audioManager={audioManager} />
       ) : (
         <SignalScoutScreen 
           audioManager={audioManager} 

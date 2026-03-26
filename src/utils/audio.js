@@ -457,7 +457,7 @@ class SoundEngine {
 
         // Special handling for Park Theme with MP3
         if (theme === 'park') {
-            const buffer = await this.getBuffer('/ThemeAudio/park.mp3');
+            const buffer = await this.getBuffer('/ThemeAudio/park.mp3') || await this.getBuffer('/ThemeAudio/bc.mp3');
             if (buffer) {
                 const source = this.ctx.createBufferSource();
                 source.buffer = buffer;
@@ -466,7 +466,7 @@ class SoundEngine {
 
                 // Softer volume for background with fade-in
                 gain.gain.setValueAtTime(0.001, this.ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.3, this.ctx.currentTime + 2);
+                gain.gain.exponentialRampToValueAtTime(0.2, this.ctx.currentTime + 2);
 
                 if (this.musicGeneration !== gen) {
                     source.stop();
@@ -484,7 +484,7 @@ class SoundEngine {
 
         // Special handling for Campus Theme with MP3
         if (theme === 'campus') {
-            const buffer = await this.getBuffer('/ThemeAudio/campus.mp3');
+            const buffer = await this.getBuffer('/ThemeAudio/campus.mp3') || await this.getBuffer('/ThemeAudio/bc.mp3');
             if (buffer) {
                 const source = this.ctx.createBufferSource();
                 source.buffer = buffer;

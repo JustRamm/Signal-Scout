@@ -24,6 +24,19 @@ const SignalScoutScreen = ({ audioManager, onExit, isPaused: externalPaused = fa
     const usedScenarioIdsRef = useRef(new Set());
     const spawnTimerRef = useRef(null);
 
+    // --- Music & Ambient Logic ---
+    useEffect(() => {
+        if (!audioManager) return;
+
+        if (gameState === 'REGISTRATION' || gameState === 'INTRO') {
+            audioManager.playMenuMusic();
+        } else if (gameState === 'PLAYING') {
+            audioManager.startAmbient('park'); // Use 'park' as default city vibe
+        } else if (gameState === 'COMPLETED') {
+            audioManager.playVictory();
+        }
+    }, [gameState, audioManager]);
+
     // --- Asset Mapping ---
     const getStickmanAsset = (category) => {
         const assets = {
