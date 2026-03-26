@@ -119,10 +119,79 @@ const RegistrationScreen = ({ onRegister, audioManager }) => {
                             onChange={(e) => setFormData({...formData, college: e.target.value})}
                         >
                             <option value="">Select College</option>
-                            <optgroup label="Institutions">
+
+                            <optgroup label="🏛️ Kerala — Engineering Colleges">
+                                <option value="College of Engineering Trivandrum (CET)">College of Engineering Trivandrum (CET)</option>
+                                <option value="Government Engineering College Thrissur">Government Engineering College Thrissur</option>
+                                <option value="Government Engineering College Palakkad">Government Engineering College Palakkad</option>
+                                <option value="Government Engineering College Kannur">Government Engineering College Kannur</option>
+                                <option value="Government Engineering College Kozhikode">Government Engineering College Kozhikode</option>
+                                <option value="Model Engineering College, Ernakulam">Model Engineering College, Ernakulam</option>
+                                <option value="Rajiv Gandhi Institute of Technology, Kottayam">Rajiv Gandhi Institute of Technology, Kottayam</option>
+                                <option value="NSS College of Engineering, Palakkad">NSS College of Engineering, Palakkad</option>
+                                <option value="Mar Athanasius College of Engineering, Kothamangalam">Mar Athanasius College of Engineering, Kothamangalam</option>
+                                <option value="Toc H Institute of Science and Technology (TIST)">Toc H Institute of Science and Technology (TIST)</option>
+                                <option value="MES College of Engineering, Kuttippuram">MES College of Engineering, Kuttippuram</option>
+                                <option value="LBS College of Engineering, Kasaragod">LBS College of Engineering, Kasaragod</option>
+                                <option value="Sree Chitra Thirunal College of Engineering">Sree Chitra Thirunal College of Engineering</option>
+                                <option value="Ilahia College of Engineering, Muvattupuzha">Ilahia College of Engineering, Muvattupuzha</option>
+                                <option value="Viswajyothi College of Engineering, Vazhakulam">Viswajyothi College of Engineering, Vazhakulam</option>
+                            </optgroup>
+
+                            <optgroup label="🏥 Kerala — Medical Colleges">
+                                <option value="Government Medical College Thiruvananthapuram">Government Medical College Thiruvananthapuram</option>
+                                <option value="Government Medical College Kozhikode">Government Medical College Kozhikode</option>
+                                <option value="Government Medical College Thrissur">Government Medical College Thrissur</option>
+                                <option value="Government Medical College Kottayam">Government Medical College Kottayam</option>
+                                <option value="Amrita Institute of Medical Sciences, Kochi">Amrita Institute of Medical Sciences, Kochi</option>
+                                <option value="Pushpagiri Medical College, Thiruvalla">Pushpagiri Medical College, Thiruvalla</option>
+                                <option value="Jubilee Mission Medical College, Thrissur">Jubilee Mission Medical College, Thrissur</option>
+                                <option value="Believers Church Medical College, Thiruvalla">Believers Church Medical College, Thiruvalla</option>
+                            </optgroup>
+
+                            <optgroup label="🎓 Kerala — Arts, Science & Commerce">
+                                <option value="University College Thiruvananthapuram">University College Thiruvananthapuram</option>
+                                <option value="Maharaja's College Ernakulam">Maharaja's College Ernakulam</option>
+                                <option value="St. Albert's College Ernakulam">St. Albert's College Ernakulam</option>
+                                <option value="St. Teresa's College Ernakulam">St. Teresa's College Ernakulam</option>
+                                <option value="Sacred Heart College Thevara">Sacred Heart College Thevara</option>
+                                <option value="Farook College, Kozhikode">Farook College, Kozhikode</option>
+                                <option value="Malabar Christian College, Kozhikode">Malabar Christian College, Kozhikode</option>
+                                <option value="Devagiri College, Kozhikode">Devagiri College, Kozhikode</option>
+                                <option value="Providence Women's College, Kozhikode">Providence Women's College, Kozhikode</option>
+                                <option value="St. Joseph's College, Devagiri">St. Joseph's College, Devagiri</option>
+                                <option value="SH College, Thevara">SH College, Thevara</option>
+                                <option value="Baselius College, Kottayam">Baselius College, Kottayam</option>
+                                <option value="Bharata Mata College, Thrikkakara">Bharata Mata College, Thrikkakara</option>
+                                <option value="St. Paul's College, Kalamassery">St. Paul's College, Kalamassery</option>
+                                <option value="Assumption College, Changanacherry">Assumption College, Changanacherry</option>
+                                <option value="St. Berchmans College, Changanacherry">St. Berchmans College, Changanacherry</option>
+                                <option value="BCM College, Kottayam">BCM College, Kottayam</option>
+                                <option value="Government College Chittur, Palakkad">Government College Chittur, Palakkad</option>
+                                <option value="Sree Kerala Varma College, Thrissur">Sree Kerala Varma College, Thrissur</option>
+                                <option value="St. Thomas College, Thrissur">St. Thomas College, Thrissur</option>
+                                <option value="Christ College, Irinjalakuda">Christ College, Irinjalakuda</option>
+                                <option value="SNGS College, Pattambi">SNGS College, Pattambi</option>
+                                <option value=" Catholicate College, Pathanamthitta"> Catholicate College, Pathanamthitta</option>
+                                <option value="MES Asmabi College, Kodungallur">MES Asmabi College, Kodungallur</option>
+                            </optgroup>
+
+                            <optgroup label="🏫 Kerala — Universities & Deemed">
+                                <option value="Cochin University of Science and Technology (CUSAT)">Cochin University of Science and Technology (CUSAT)</option>
+                                <option value="Amrita Vishwa Vidyapeetham, Coimbatore/Kochi">Amrita Vishwa Vidyapeetham</option>
+                                <option value="Kerala University, Thiruvananthapuram">Kerala University, Thiruvananthapuram</option>
+                                <option value="Mahatma Gandhi University, Kottayam">Mahatma Gandhi University, Kottayam</option>
+                                <option value="Calicut University">Calicut University</option>
+                                <option value="Kannur University">Kannur University</option>
+                                <option value="APJ Abdul Kalam Technological University">APJ Abdul Kalam Technological University</option>
+                            </optgroup>
+
+                            <optgroup label="🇮🇳 National Institutions">
                                 <option value="IIT Bombay">IIT Bombay</option>
                                 <option value="IIT Delhi">IIT Delhi</option>
                                 <option value="IIT Madras">IIT Madras</option>
+                                <option value="NIT Calicut">NIT Calicut</option>
+                                <option value="NIT Trichy">NIT Trichy</option>
                                 <option value="BITS Pilani">BITS Pilani</option>
                                 <option value="Delhi University">Delhi University</option>
                                 <option value="SRM University">SRM University</option>
@@ -130,10 +199,10 @@ const RegistrationScreen = ({ onRegister, audioManager }) => {
                                 <option value="Manipal Institute">Manipal Institute</option>
                                 <option value="Amity University">Amity University</option>
                                 <option value="Anna University">Anna University</option>
-                                <option value="Christ University">Christ University</option>
+                                <option value="Christ University Bangalore">Christ University Bangalore</option>
                                 <option value="Symbiosis International">Symbiosis International</option>
-                                <option value="Jawaharlal Nehru University">Jawaharlal Nehru University</option>
                             </optgroup>
+
                             <option value="Other / Not Listed">Other / Not Listed</option>
                         </select>
                     </div>
