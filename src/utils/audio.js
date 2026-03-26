@@ -383,7 +383,7 @@ class SoundEngine {
         if (!this.initialized || this.currentTrack === 'menu') return;
 
         try {
-            const buffer = await this.getBuffer('/ThemeAudio/bc.mp3');
+            const buffer = await this.getBuffer('/ThemeAudio/background.mp3');
             if (buffer) {
                 const source = this.ctx.createBufferSource();
                 source.buffer = buffer;
@@ -455,9 +455,8 @@ class SoundEngine {
 
         const nodes = [];
 
-        // Special handling for Park Theme - Default to bc.mp3
         if (theme === 'park') {
-            const buffer = await this.getBuffer('/ThemeAudio/bc.mp3');
+            const buffer = await this.getBuffer('/ThemeAudio/background.mp3');
             if (buffer) {
                 const source = this.ctx.createBufferSource();
                 source.buffer = buffer;
@@ -481,9 +480,8 @@ class SoundEngine {
             }
         }
 
-        // Special handling for Campus Theme - Default to bc.mp3
         if (theme === 'campus') {
-            const buffer = await this.getBuffer('/ThemeAudio/bc.mp3');
+            const buffer = await this.getBuffer('/ThemeAudio/background.mp3');
             if (buffer) {
                 const source = this.ctx.createBufferSource();
                 source.buffer = buffer;
