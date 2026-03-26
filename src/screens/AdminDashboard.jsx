@@ -12,14 +12,20 @@ const AdminDashboard = ({ onExit }) => {
         hubs: [],
         scoreDistribution: [65, 35],
         trendData: [30, 45, 35, 60, 55, 80, 75],
-        ageGroups: { '0-10': 0, '11-18': 0, '19-21': 0, '22-25': 0, '26-30': 0, '31+': 0 } // UPDATED
+        ageGroups: { '0-10': 0, '11-18': 0, '19-21': 0, '22-25': 0, '26-30': 0, '31+': 0 },
+        genderStats: { 'Male': 0, 'Female': 0, 'Other': 0 },
+        fieldStats: {}
     });
     const [selectedState, setSelectedState] = useState('Overall');
+    const [selectedField, setSelectedField] = useState('Overall');
     const [timeFilter, setTimeFilter] = useState('Overall'); // '1w', '1m', '6m', '1y', 'Overall'
     const [allData, setAllData] = useState([]);
 
     // Extracting state list from institutions
     const stateList = Object.keys(INSTITUTIONS).sort();
+    
+    // Extracting unique fields from institutions
+    const fieldList = [...new Set(Object.values(INSTITUTIONS).flatMap(s => Object.keys(s)))].sort();
 
     useEffect(() => {
         fetchStats();
@@ -35,7 +41,7 @@ const AdminDashboard = ({ onExit }) => {
             if (error) throw error;
             if (data) {
                 setAllData(data);
-                processStats(data, 'Overall', 'Overall');
+                processStats(data, 'Overall', 'Overall', 'Overall');
             }
         } catch (err) {
             console.error('Error fetching admin stats:', err);
@@ -43,8 +49,18 @@ const AdminDashboard = ({ onExit }) => {
         }
     };
 
-    const processStats = (data, state, time) => {
-        let filtered = state === 'Overall' ? data : data.filter(p => p.state === state);
+    const processStats = (data, state, field, time) => {
+        let filtered = data;
+
+        // State Filtering
+        if (state !== 'Overall') {
+            filtered = filtered.filter(p => p.state === state);
+        }
+
+        // Field Filtering
+        if (field !== 'Overall') {
+            filtered = filtered.filter(p => p.field_of_study === field);
+        }
 
         // Time Filtering logic
         if (time !== 'Overall') {
@@ -72,6 +88,17 @@ const AdminDashboard = ({ onExit }) => {
             else if (age >= 26 && age <= 30) ageGroups['26-30']++;
             else if (age >= 31) ageGroups['31+']++;
         });
+
+        // Gender & Field Stats Logic
+        const genderStats = { 'Male': 0, 'Female': 0, 'Other': 0 };
+        const fieldMap = {};
+        
+        filtered.forEach(p => {
+            if (p.gender) genderStats[p.gender] = (genderStats[p.gender] || 0) + 1;
+            if (p.field_of_study) fieldMap[p.field_of_study] = (fieldMap[p.field_of_study] || 0) + 1;
+        });
+        const fieldStats = Object.entries(fieldMap)
+            .sort((a, b) => b[1] - a[1]);
 
         const collegeMap = {};
         filtered.forEach(p => {
@@ -103,18 +130,25 @@ const AdminDashboard = ({ onExit }) => {
             recentFeedback: filtered.filter(p => p.feedback).slice(0, 24), // Show more in pictorial view
             loading: false,
             hubs,
-            ageGroups // NEW
+            ageGroups,
+            genderStats,
+            fieldStats
         }));
     };
 
     const changeState = (state) => {
         setSelectedState(state);
-        processStats(allData, state, timeFilter);
+        processStats(allData, state, selectedField, timeFilter);
+    };
+
+    const changeField = (field) => {
+        setSelectedField(field);
+        processStats(allData, selectedState, field, timeFilter);
     };
 
     const changeTime = (time) => {
         setTimeFilter(time);
-        processStats(allData, selectedState, time);
+        processStats(allData, selectedState, selectedField, time);
     };
 
     if (stats.loading) {
@@ -155,7 +189,7 @@ const AdminDashboard = ({ onExit }) => {
                         </div>
                         <div>
                             <h1 className="text-lg md:text-xl font-black tracking-tighter text-slate-900 leading-none">SCOUT<span className="text-indigo-600">INTEL</span></h1>
-                            <p className="text-[9px] md:text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5 animate-pulse">● System Live / {selectedState}</p>
+                            <p className="text-[9px] md:text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5 animate-pulse">● System Live / {selectedState} / {selectedField}</p>
                         </div>
                         {/* Mobile exit button hidden on desktop */}
                         <div className="ml-auto md:hidden">
@@ -163,9 +197,9 @@ const AdminDashboard = ({ onExit }) => {
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-2 w-full md:w-auto mt-2 md:mt-0">
+                    <div className="flex flex-wrap items-center gap-2 w-full md:w-auto mt-2 md:mt-0">
                         <div className="flex-1 flex items-center gap-1.5 bg-slate-50 md:bg-white shadow-sm border border-slate-100 p-1.5 md:p-2 pr-3 md:pr-6 rounded-2xl">
-                            <span className="text-[8px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1 md:pl-3 whitespace-nowrap">Reg:</span>
+                            <span className="text-[8px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1 md:pl-3 whitespace-nowrap">State:</span>
                             <select
                                 value={selectedState}
                                 onChange={(e) => changeState(e.target.value)}
@@ -174,6 +208,20 @@ const AdminDashboard = ({ onExit }) => {
                                 <option value="Overall">Overall</option>
                                 {stateList.map(s => (
                                     <option key={s} value={s}>{s}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="flex-1 flex items-center gap-1.5 bg-slate-50 md:bg-white shadow-sm border border-slate-100 p-1.5 md:p-2 pr-3 md:pr-6 rounded-2xl">
+                            <span className="text-[8px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1 md:pl-3 whitespace-nowrap">Field:</span>
+                            <select
+                                value={selectedField}
+                                onChange={(e) => changeField(e.target.value)}
+                                className="bg-transparent md:bg-slate-50 border-none outline-none rounded-xl px-1 md:px-4 py-1.5 text-[10px] md:text-xs font-bold text-indigo-600 cursor-pointer min-w-0 w-full"
+                            >
+                                <option value="Overall">Overall</option>
+                                {fieldList.map(f => (
+                                    <option key={f} value={f}>{f}</option>
                                 ))}
                             </select>
                         </div>
@@ -241,19 +289,45 @@ const AdminDashboard = ({ onExit }) => {
                     <div className="md:col-span-2 bg-slate-900 p-10 rounded-[48px] shadow-2xl overflow-hidden relative group">
                         <div className="flex justify-between items-center mb-10 border-b border-white/5 pb-8 relative z-10">
                             <div>
-                                <h3 className="text-white font-black text-xl italic tracking-tighter">Impact Distribution</h3>
-                                <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest">Growth by Regional Hubs</p>
+                                <h3 className="text-white font-black text-xl italic tracking-tighter">Strategic Demographics</h3>
+                                <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest">Gender & Talent Distribution</p>
                             </div>
-                            <span className="px-4 py-2 bg-indigo-500/20 text-indigo-400 rounded-full text-[10px] font-black uppercase tracking-widest">Live Sync</span>
+                            <span className="px-4 py-2 bg-indigo-500/20 text-indigo-400 rounded-full text-[10px] font-black uppercase tracking-widest">Impact Core</span>
                         </div>
 
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 relative z-10">
-                            {stats.hubs.map(([hub, count], i) => (
-                                <div key={hub} className="bg-white/5 p-4 rounded-3xl border border-white/5 hover:bg-white/10 hover:border-indigo-500/30 transition-all text-center">
-                                    <h4 className="text-[10px] font-black text-indigo-400 uppercase mb-2 truncate">{hub}</h4>
-                                    <div className="text-2xl font-black text-white">{count}</div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 relative z-10">
+                            {/* Gender Spreads */}
+                            <div>
+                                <p className="text-white/40 text-[9px] font-black uppercase tracking-[0.2em] mb-4">Gender Diversity</p>
+                                <div className="space-y-4">
+                                    {Object.entries(stats.genderStats).map(([gender, count]) => {
+                                        const pc = stats.totalPlayers ? Math.round((count / stats.totalPlayers) * 100) : 0;
+                                        return (
+                                            <div key={gender}>
+                                                <div className="flex justify-between text-[10px] font-bold text-white mb-1.5">
+                                                    <span>{gender}</span>
+                                                    <span>{pc}%</span>
+                                                </div>
+                                                <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+                                                    <div className="h-full bg-indigo-500" style={{ width: `${pc}%` }}></div>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
                                 </div>
-                            ))}
+                            </div>
+                            {/* Field Spread */}
+                            <div>
+                                <p className="text-white/40 text-[9px] font-black uppercase tracking-[0.2em] mb-4">Focus Disciplines</p>
+                                <div className="space-y-4">
+                                    {stats.fieldStats.slice(0, 3).map(([field, count]) => (
+                                        <div key={field} className="flex justify-between items-center bg-white/5 p-3 rounded-2xl border border-white/5">
+                                            <span className="text-[10px] font-black text-indigo-300 uppercase">{field}</span>
+                                            <span className="text-xl font-black text-white">{count}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
                         <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-600/10 rounded-full blur-[100px] pointer-events-none"></div>
                     </div>

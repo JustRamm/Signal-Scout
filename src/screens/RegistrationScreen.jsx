@@ -7,27 +7,44 @@ const RegistrationScreen = ({ onRegister, audioManager }) => {
         name: '',
         age: '',
         state: '',
+        manualState: '',
         university: '',
+        manualUniversity: '',
         college: '',
-        manualCollege: ''
+        manualCollege: '',
+        gender: '',
+        fieldOfStudy: '',
+        hasPriorTraining: false
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
     const states = Object.keys(INSTITUTIONS).sort();
-    const universities = formData.state ? Object.keys(INSTITUTIONS[formData.state] || {}).sort() : [];
-    const colleges = (formData.state && formData.university) ? (INSTITUTIONS[formData.state][formData.university] || []).sort() : [];
+    
+    // Updated filtering logic using the new hierarchy
+    const universities = (formData.state && formData.fieldOfStudy)
+        ? [...Object.keys((INSTITUTIONS[formData.state] || {})[formData.fieldOfStudy] || {}).filter(u => u !== "Other University").sort(), "Other University"]
+        : [];
+        
+    const colleges = (formData.state && formData.fieldOfStudy && formData.university && formData.university !== 'Other University')
+        ? [...(((INSTITUTIONS[formData.state] || {})[formData.fieldOfStudy] || {})[formData.university] || []).filter(c => c !== "Other").sort(), "Other"]
+        : [];
 
-    const isOther = formData.college === 'Other' || formData.university === 'Other University' || (formData.state && !states.includes(formData.state));
+    const isOther = formData.state === 'Other' || formData.university === 'Other University' || formData.college === 'Other';
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError(null);
 
-        const finalCollege = isOther ? (formData.manualCollege || formData.college) : formData.college;
+
+        const finalState = formData.state === 'Other' ? formData.manualState : formData.state;
+        const finalUniversity = formData.university === 'Other University' ? formData.manualUniversity : formData.university;
+        const finalCollege = (formData.college === 'Other' || formData.university === 'Other University' || formData.state === 'Other') 
+            ? formData.manualCollege 
+            : formData.college;
 
         // Validation
-        if (!formData.name || !formData.age || !formData.state || !formData.university || !finalCollege) {
+        if (!formData.name || !formData.age || !finalState || !finalUniversity || !finalCollege || !formData.gender || !formData.fieldOfStudy) {
             setError("Please fill in all the required details.");
             if (audioManager) audioManager.playSad();
             return;
@@ -44,7 +61,9 @@ const RegistrationScreen = ({ onRegister, audioManager }) => {
         try {
             await onRegister({
                 ...formData,
-                college: finalCollege // Use the resolved college name
+                state: finalState,
+                university: finalUniversity,
+                college: finalCollege
             });
         } catch (err) {
             setError("Failed to register. Please try again.");
@@ -82,34 +101,70 @@ const RegistrationScreen = ({ onRegister, audioManager }) => {
                     {/* Name */}
                     <div>
                         <label className="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-2">Full Name</label>
-                        <input 
+                        <input
                             type="text"
                             placeholder="e.g. John D"
                             className="w-full px-5 py-3 bg-slate-100 border-none rounded-2xl text-slate-900 font-bold focus:ring-2 focus:ring-orange-400 transition-all outline-none"
                             value={formData.name}
-                            onChange={(e) => setFormData({...formData, name: e.target.value})}
+                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         />
                     </div>
 
-                    <div className="grid grid-cols-2 gap-3.5">
+                    {/* Secondary Demographics Group */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                        {/* Gender */}
+                        <div>
+                            <label className="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-2">Gender</label>
+                            <select
+                                className="w-full px-5 py-3 bg-slate-100 border-none rounded-2xl text-slate-900 font-bold focus:ring-2 focus:ring-orange-400 transition-all outline-none appearance-none"
+                                value={formData.gender}
+                                onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
+                            >
+                                <option value="">Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                                <option value="Prefer not to say">Prefer not to say</option>
+                            </select>
+                        </div>
                         {/* Age */}
                         <div>
-                            <label className="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-2">Age</label>
-                            <input 
+                            <label className="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-2">Your Age</label>
+                            <input
                                 type="number"
                                 placeholder="Age"
                                 className="w-full px-5 py-3 bg-slate-100 border-none rounded-2xl text-slate-900 font-bold focus:ring-2 focus:ring-orange-400 transition-all outline-none"
                                 value={formData.age}
-                                onChange={(e) => setFormData({...formData, age: e.target.value})}
+                                onChange={(e) => setFormData({ ...formData, age: e.target.value })}
                             />
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                        {/* Field of Study */}
+                        <div>
+                            <label className="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-2">Field of Study</label>
+                            <select
+                                className="w-full px-5 py-3 bg-slate-100 border-none rounded-2xl text-slate-900 font-bold focus:ring-2 focus:ring-orange-400 transition-all outline-none appearance-none"
+                                value={formData.fieldOfStudy}
+                                onChange={(e) => setFormData({ ...formData, fieldOfStudy: e.target.value, university: '', college: '' })}
+                            >
+                                <option value="">Select Field</option>
+                                <option value="Science & Tech">Science & Tech</option>
+                                <option value="Arts & Humanities">Arts & Humanities</option>
+                                <option value="Commerce & Biz">Commerce & Biz</option>
+                                <option value="Medical & Health">Medical & Health</option>
+                                <option value="Law">Law</option>
+                                <option value="Other">Other</option>
+                            </select>
                         </div>
                         {/* State Dropdown */}
                         <div>
-                            <label className="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-2">State</label>
-                            <select 
+                            <label className="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-2">Home State</label>
+                            <select
                                 className="w-full px-5 py-3 bg-slate-100 border-none rounded-2xl text-slate-900 font-bold focus:ring-2 focus:ring-orange-400 transition-all outline-none appearance-none"
                                 value={formData.state}
-                                onChange={(e) => setFormData({...formData, state: e.target.value, university: '', college: ''})}
+                                onChange={(e) => setFormData({ ...formData, state: e.target.value, university: '', college: '' })}
                             >
                                 <option value="">Select State</option>
                                 {states.map(s => <option key={s} value={s}>{s}</option>)}
@@ -117,62 +172,105 @@ const RegistrationScreen = ({ onRegister, audioManager }) => {
                         </div>
                     </div>
 
-                    {/* University Dropdown */}
-                    {formData.state && (
+                    {/* Manual State Input */}
+                    {formData.state === 'Other' && (
                         <div className="animate-fade-in text-left">
-                            <label className="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-2">University / Board</label>
-                            <select 
-                                className="w-full px-5 py-3 bg-slate-100 border-none rounded-2xl text-slate-900 font-bold focus:ring-2 focus:ring-orange-400 transition-all outline-none appearance-none"
-                                value={formData.university}
-                                onChange={(e) => setFormData({...formData, university: e.target.value, college: ''})}
-                            >
-                                <option value="">Select University</option>
-                                {universities.map(u => <option key={u} value={u}>{u}</option>)}
-                            </select>
-                        </div>
-                    )}
-
-                    {/* College Dropdown */}
-                    {formData.university && formData.university !== 'Other University' && (
-                        <div className="animate-fade-in text-left">
-                            <label className="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-2">College Name</label>
-                            <select 
-                                className="w-full px-5 py-3 bg-slate-100 border-none rounded-2xl text-slate-900 font-bold focus:ring-2 focus:ring-orange-400 transition-all outline-none appearance-none font-bold"
-                                value={formData.college}
-                                onChange={(e) => setFormData({...formData, college: e.target.value})}
-                            >
-                                <option value="">Select Institution</option>
-                                {colleges.map(c => <option key={c} value={c}>{c}</option>)}
-                            </select>
-                        </div>
-                    )}
-
-                    {/* Conditional Other College Input */}
-                    { isOther && (
-                        <div className="animate-fade-in text-left">
-                            <label className="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-2">Specify College Name</label>
-                            <input 
+                            <label className="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-2">Specify State</label>
+                            <input
                                 type="text"
-                                placeholder="Enter Institution Name..."
-                                className="w-full px-5 py-3 bg-slate-100 border-none rounded-2xl text-slate-900 font-bold focus:ring-2 focus:ring-orange-400 transition-all outline-none"
-                                value={formData.manualCollege || (formData.university === 'Other University' ? '' : formData.college)}
-                                onChange={(e) => setFormData({...formData, manualCollege: e.target.value})}
+                                placeholder="Enter your state name..."
+                                className="w-full px-4 py-3 bg-orange-50/50 border border-orange-200 rounded-2xl text-slate-900 font-bold focus:ring-2 focus:ring-orange-400 transition-all outline-none"
+                                value={formData.manualState}
+                                onChange={(e) => setFormData({ ...formData, manualState: e.target.value })}
                                 autoFocus
                             />
                         </div>
                     )}
 
-                    <button 
+                    {/* Academic Section */}
+                    {formData.state && formData.fieldOfStudy && (
+                        <div className="space-y-3.5 pt-2 border-t border-slate-100 mt-2">
+                            {/* University Dropdown */}
+                            <div className="animate-fade-in text-left">
+                                <label className="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-2">University / Board</label>
+                                <select
+                                    className="w-full px-5 py-3 bg-slate-100 border-none rounded-2xl text-slate-900 font-bold focus:ring-2 focus:ring-orange-400 transition-all outline-none appearance-none"
+                                    value={formData.university}
+                                    onChange={(e) => setFormData({ ...formData, university: e.target.value, college: '' })}
+                                >
+                                    <option value="">Select University</option>
+                                    {universities.map(u => <option key={u} value={u}>{u}</option>)}
+                                </select>
+                            </div>
+
+                            {/* Manual University Input */}
+                            {formData.university === 'Other University' && (
+                                <div className="animate-fade-in text-left">
+                                    <label className="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-2">Specify University</label>
+                                    <input
+                                        type="text"
+                                        placeholder="Enter university / board name..."
+                                        className="w-full px-4 py-3 bg-orange-50/50 border border-orange-200 rounded-2xl text-slate-900 font-bold focus:ring-2 focus:ring-orange-400 transition-all outline-none"
+                                        value={formData.manualUniversity}
+                                        onChange={(e) => setFormData({ ...formData, manualUniversity: e.target.value })}
+                                        autoFocus
+                                    />
+                                </div>
+                            )}
+
+                            {/* College Dropdown */}
+                            {formData.university && formData.university !== 'Other University' && (
+                                <div className="animate-fade-in text-left">
+                                    <label className="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-2">College Name</label>
+                                    <select
+                                        className="w-full px-5 py-3 bg-slate-100 border-none rounded-2xl text-slate-900 font-bold focus:ring-2 focus:ring-orange-400 transition-all outline-none appearance-none"
+                                        value={formData.college}
+                                        onChange={(e) => setFormData({ ...formData, college: e.target.value })}
+                                    >
+                                        <option value="">Select Institution</option>
+                                        {colleges.map(c => <option key={c} value={c}>{c}</option>)}
+                                    </select>
+                                </div>
+                            )}
+
+                            {/* Manual College Input */}
+                            {(formData.college === 'Other' || formData.university === 'Other University' || formData.state === 'Other') && (
+                                <div className="animate-fade-in text-left">
+                                    <label className="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-2">Specify Institution Name</label>
+                                    <input
+                                        type="text"
+                                        placeholder="Enter college name manually..."
+                                        className="w-full px-4 py-3 bg-orange-50/50 border border-orange-200 rounded-2xl text-slate-900 font-bold focus:ring-2 focus:ring-orange-400 transition-all outline-none"
+                                        value={formData.manualCollege}
+                                        onChange={(e) => setFormData({ ...formData, manualCollege: e.target.value })}
+                                        autoFocus
+                                    />
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Prior Knowledge Toggle */}
+                    <div className="flex items-center gap-3 px-4 py-3 bg-orange-50/30 rounded-2xl border border-orange-100 hover:bg-orange-50/50 transition-colors cursor-pointer group" onClick={() => setFormData({ ...formData, hasPriorTraining: !formData.hasPriorTraining })}>
+                        <div className={`w-5 h-5 rounded flex items-center justify-center transition-all ${formData.hasPriorTraining ? 'bg-orange-500 shadow-md' : 'bg-white border-2 border-orange-200'}`}>
+                            {formData.hasPriorTraining && <svg className="w-3.5 h-3.5 text-white stroke-current" viewBox="0 0 24 24" fill="none" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>}
+                        </div>
+                        <label className="text-[10px] sm:text-xs font-bold text-slate-600 cursor-pointer select-none">
+                            I have attended a Mental Health Awareness session before.
+                        </label>
+                    </div>
+
+                    <button
                         type="submit"
                         disabled={loading}
-                        className="w-full mt-4 py-4 bg-orange-500 hover:bg-orange-600 disabled:bg-slate-300 text-white rounded-2xl font-black uppercase tracking-widest text-sm shadow-xl shadow-orange-200 transition-all transform active:scale-95 flex items-center justify-center gap-2"
+                        className="w-full mt-2 py-4 bg-orange-500 hover:bg-orange-600 disabled:bg-slate-300 text-white rounded-2xl font-black uppercase tracking-widest text-sm shadow-xl shadow-orange-200 transition-all transform active:scale-95 flex items-center justify-center gap-2 group"
                     >
                         {loading ? 'Processing...' : 'Complete Enrollment'}
-                        {!loading && <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>}
+                        {!loading && <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>}
                     </button>
                 </form>
 
-                <p className="mt-6 sm:mt-8 text-[8px] sm:text-[9px] text-slate-400 font-bold text-center uppercase tracking-widest leading-relaxed">
+                <p className="mt-6 text-[8px] sm:text-[9px] text-slate-400 font-bold text-center uppercase tracking-widest leading-relaxed">
                     By enrolling, you agree to the urban scout protocol and data privacy measures of Mind Empowered.
                 </p>
             </div>

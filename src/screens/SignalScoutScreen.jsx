@@ -17,7 +17,7 @@ const SignalScoutScreen = ({ audioManager, onExit, isPaused: externalPaused = fa
     const [gameProgress, setGameProgress] = useState(20); // 0 to 100
     const [mistakes, setMistakes] = useState(0);
     const [people, setPeople] = useState([]);
-    const [feedback, setFeedback] = useState(null); 
+    const [feedback, setFeedback] = useState(null);
     const [paused, setPaused] = useState(false);
 
     // Refs
@@ -64,6 +64,10 @@ const SignalScoutScreen = ({ audioManager, onExit, isPaused: externalPaused = fa
         const playerRecord = {
             name: data.name,
             age: parseInt(data.age),
+            gender: data.gender,
+            field_of_study: data.fieldOfStudy,
+            has_prior_training: data.hasPriorTraining,
+            university: data.university,
             college: data.college,
             state: data.state,
             score: 0,
@@ -87,7 +91,7 @@ const SignalScoutScreen = ({ audioManager, onExit, isPaused: externalPaused = fa
     const endGame = async (finalProgress) => {
         const isSuccess = finalProgress >= 100;
         setGameState(isSuccess ? 'SUCCESS' : 'END');
-        
+
         if (isSuccess && audioManager) audioManager.playVictory();
         else if (audioManager) audioManager.playGameOver();
 
@@ -143,7 +147,7 @@ const SignalScoutScreen = ({ audioManager, onExit, isPaused: externalPaused = fa
         }
 
         const spawnPair = () => {
-             setPeople(currentPeople => {
+            setPeople(currentPeople => {
                 const centerOccupied = currentPeople.some(p => p.x > 10 && p.x < 90 && !p.isClicked);
                 if (centerOccupied || currentPeople.length >= 2) return currentPeople;
 
@@ -192,7 +196,7 @@ const SignalScoutScreen = ({ audioManager, onExit, isPaused: externalPaused = fa
         };
 
         if (people.length === 0) spawnPair();
-        spawnTimerRef.current = setInterval(spawnPair, 1000); 
+        spawnTimerRef.current = setInterval(spawnPair, 1000);
         return () => clearInterval(spawnTimerRef.current);
     }, [gameState, externalPaused, paused, people.length]);
 
@@ -263,15 +267,15 @@ const SignalScoutScreen = ({ audioManager, onExit, isPaused: externalPaused = fa
 
     return (
         <div className="fixed inset-0 z-[100] bg-slate-900 flex flex-col overflow-hidden font-sans select-none text-white">
-            
+
             {gameState === 'REGISTRATION' && (
                 <RegistrationScreen onRegister={handleRegister} audioManager={audioManager} />
             )}
 
             {gameState === 'INTRO' && <TutorialScreen onStart={startGame} />}
-            
+
             {gameState === 'PLAYING' && (
-                <GameView 
+                <GameView
                     score={score}
                     gameProgress={gameProgress}
                     people={people}
@@ -285,12 +289,12 @@ const SignalScoutScreen = ({ audioManager, onExit, isPaused: externalPaused = fa
             )}
 
             {(gameState === 'END' || gameState === 'SUCCESS') && (
-                <GameOverScreen 
-                    score={score} 
+                <GameOverScreen
+                    score={score}
                     isSuccess={gameState === 'SUCCESS'}
-                    onPlayAgain={startGame} 
-                    onNext={() => setGameState('RATING')} 
-                    onExit={onExit} 
+                    onPlayAgain={startGame}
+                    onNext={() => setGameState('RATING')}
+                    onExit={onExit}
                 />
             )}
 
@@ -303,7 +307,7 @@ const SignalScoutScreen = ({ audioManager, onExit, isPaused: externalPaused = fa
             )}
 
             {paused && <PauseOverlay onResume={togglePause} />}
-            
+
         </div>
     );
 };
