@@ -48,21 +48,21 @@ const RegistrationScreen = ({ onRegister, audioManager }) => {
     };
 
     return (
-        <div className="absolute inset-0 z-[400] bg-slate-900 flex items-center justify-center p-6 overflow-y-auto">
+        <div className="absolute inset-0 z-[400] bg-slate-900 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
             {/* Real Backdrop */}
             <div className="absolute inset-0 z-0">
                 <CitySquareScenery showTrees={true} showLights={true} />
             </div>
 
-            <div className="relative z-10 w-full max-w-md bg-white/95 backdrop-blur-2xl rounded-[32px] p-8 md:p-10 shadow-3xl border border-white/20 animate-scale-in">
-                <div className="text-center mb-8">
-                    <div className="w-16 h-16 bg-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+            <div className="relative z-10 w-full max-w-md bg-white/95 backdrop-blur-2xl rounded-[24px] sm:rounded-[32px] p-6 sm:p-8 md:p-10 shadow-3xl border border-white/20 animate-scale-in">
+                <div className="text-center mb-6 sm:mb-8">
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 bg-orange-500 rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 shadow-lg">
                         <svg className="w-8 h-8 text-white fill-current" viewBox="0 0 24 24">
                             <path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" />
                         </svg>
                     </div>
-                    <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tight">Scout Enrollment</h2>
-                    <p className="text-slate-500 text-sm font-medium">Join the urban compassion network</p>
+                    <h2 className="text-xl sm:text-2xl font-black text-slate-900 uppercase tracking-tight">Scout Enrollment</h2>
+                    <p className="text-slate-500 text-[11px] sm:text-sm font-medium">Join the urban compassion network</p>
                 </div>
 
                 {error && (
@@ -115,97 +115,92 @@ const RegistrationScreen = ({ onRegister, audioManager }) => {
                         <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-2">College / Institution</label>
                         <select 
                             className="w-full px-5 py-3.5 bg-slate-100 border-none rounded-2xl text-slate-900 font-bold focus:ring-2 focus:ring-orange-400 transition-all outline-none appearance-none"
-                            value={formData.college}
-                            onChange={(e) => setFormData({...formData, college: e.target.value})}
+                            value={formData.college === 'Other' || !['IIT Bombay', 'IIT Delhi', 'IIT Madras', 'IIT Kanpur', 'IIT Kharagpur', 'IIT Roorkee', 'IIT Guwahati', 'IIT Hyderabad', 'NIT Calicut', 'NIT Trichy', 'NIT Surathkal', 'NIT Warangal', 'NIT Rourkela', 'BITS Pilani', 'BITS Goa', 'BITS Hyderabad', 'Anna University', 'VIT Vellore', 'SRM University', 'Manipal Institute of Technology', 'Amrita Vishwa Vidyapeetham', 'Delhi University', 'Jawaharlal Nehru University (JNU)', 'Banaras Hindu University (BHU)', 'Jamia Millia Islamia', 'University of Mumbai', 'University of Calcutta', 'Jadavpur University', 'Savitribai Phule Pune University', 'Osmania University', 'University of Hyderabad', 'Aligarh Muslim University', 'Christ University Bangalore', 'Symbiosis International', 'St. Xavier\'s College (Mumbai/Kolkata)', 'SRCC Delhi', 'Loyola College Chennai', 'Fergusson College Pune', 'Amity University', 'Lovely Professional University (LPU)', 'Chandigarh University', 'Thapar Institute of Engineering and Technology', 'KIIT University', 'Shiv Nadar University', 'Ashoka University'].includes(formData.college) ? 'Other' : formData.college}
+                            onChange={(e) => {
+                                const val = e.target.value;
+                                if (val === 'Other') {
+                                    setFormData({...formData, college: ''});
+                                } else {
+                                    setFormData({...formData, college: val});
+                                }
+                            }}
                         >
                             <option value="">Select College</option>
 
-                            <optgroup label="🏛️ Kerala — Engineering Colleges">
-                                <option value="College of Engineering Trivandrum (CET)">College of Engineering Trivandrum (CET)</option>
-                                <option value="Government Engineering College Thrissur">Government Engineering College Thrissur</option>
-                                <option value="Government Engineering College Palakkad">Government Engineering College Palakkad</option>
-                                <option value="Government Engineering College Kannur">Government Engineering College Kannur</option>
-                                <option value="Government Engineering College Kozhikode">Government Engineering College Kozhikode</option>
-                                <option value="Model Engineering College, Ernakulam">Model Engineering College, Ernakulam</option>
-                                <option value="Rajiv Gandhi Institute of Technology, Kottayam">Rajiv Gandhi Institute of Technology, Kottayam</option>
-                                <option value="NSS College of Engineering, Palakkad">NSS College of Engineering, Palakkad</option>
-                                <option value="Mar Athanasius College of Engineering, Kothamangalam">Mar Athanasius College of Engineering, Kothamangalam</option>
-                                <option value="Toc H Institute of Science and Technology (TIST)">Toc H Institute of Science and Technology (TIST)</option>
-                                <option value="MES College of Engineering, Kuttippuram">MES College of Engineering, Kuttippuram</option>
-                                <option value="LBS College of Engineering, Kasaragod">LBS College of Engineering, Kasaragod</option>
-                                <option value="Sree Chitra Thirunal College of Engineering">Sree Chitra Thirunal College of Engineering</option>
-                                <option value="Ilahia College of Engineering, Muvattupuzha">Ilahia College of Engineering, Muvattupuzha</option>
-                                <option value="Viswajyothi College of Engineering, Vazhakulam">Viswajyothi College of Engineering, Vazhakulam</option>
-                            </optgroup>
-
-                            <optgroup label="🏥 Kerala — Medical Colleges">
-                                <option value="Government Medical College Thiruvananthapuram">Government Medical College Thiruvananthapuram</option>
-                                <option value="Government Medical College Kozhikode">Government Medical College Kozhikode</option>
-                                <option value="Government Medical College Thrissur">Government Medical College Thrissur</option>
-                                <option value="Government Medical College Kottayam">Government Medical College Kottayam</option>
-                                <option value="Amrita Institute of Medical Sciences, Kochi">Amrita Institute of Medical Sciences, Kochi</option>
-                                <option value="Pushpagiri Medical College, Thiruvalla">Pushpagiri Medical College, Thiruvalla</option>
-                                <option value="Jubilee Mission Medical College, Thrissur">Jubilee Mission Medical College, Thrissur</option>
-                                <option value="Believers Church Medical College, Thiruvalla">Believers Church Medical College, Thiruvalla</option>
-                            </optgroup>
-
-                            <optgroup label="🎓 Kerala — Arts, Science & Commerce">
-                                <option value="University College Thiruvananthapuram">University College Thiruvananthapuram</option>
-                                <option value="Maharaja's College Ernakulam">Maharaja's College Ernakulam</option>
-                                <option value="St. Albert's College Ernakulam">St. Albert's College Ernakulam</option>
-                                <option value="St. Teresa's College Ernakulam">St. Teresa's College Ernakulam</option>
-                                <option value="Sacred Heart College Thevara">Sacred Heart College Thevara</option>
-                                <option value="Farook College, Kozhikode">Farook College, Kozhikode</option>
-                                <option value="Malabar Christian College, Kozhikode">Malabar Christian College, Kozhikode</option>
-                                <option value="Devagiri College, Kozhikode">Devagiri College, Kozhikode</option>
-                                <option value="Providence Women's College, Kozhikode">Providence Women's College, Kozhikode</option>
-                                <option value="St. Joseph's College, Devagiri">St. Joseph's College, Devagiri</option>
-                                <option value="SH College, Thevara">SH College, Thevara</option>
-                                <option value="Baselius College, Kottayam">Baselius College, Kottayam</option>
-                                <option value="Bharata Mata College, Thrikkakara">Bharata Mata College, Thrikkakara</option>
-                                <option value="St. Paul's College, Kalamassery">St. Paul's College, Kalamassery</option>
-                                <option value="Assumption College, Changanacherry">Assumption College, Changanacherry</option>
-                                <option value="St. Berchmans College, Changanacherry">St. Berchmans College, Changanacherry</option>
-                                <option value="BCM College, Kottayam">BCM College, Kottayam</option>
-                                <option value="Government College Chittur, Palakkad">Government College Chittur, Palakkad</option>
-                                <option value="Sree Kerala Varma College, Thrissur">Sree Kerala Varma College, Thrissur</option>
-                                <option value="St. Thomas College, Thrissur">St. Thomas College, Thrissur</option>
-                                <option value="Christ College, Irinjalakuda">Christ College, Irinjalakuda</option>
-                                <option value="SNGS College, Pattambi">SNGS College, Pattambi</option>
-                                <option value=" Catholicate College, Pathanamthitta"> Catholicate College, Pathanamthitta</option>
-                                <option value="MES Asmabi College, Kodungallur">MES Asmabi College, Kodungallur</option>
-                            </optgroup>
-
-                            <optgroup label="🏫 Kerala — Universities & Deemed">
-                                <option value="Cochin University of Science and Technology (CUSAT)">Cochin University of Science and Technology (CUSAT)</option>
-                                <option value="Amrita Vishwa Vidyapeetham, Coimbatore/Kochi">Amrita Vishwa Vidyapeetham</option>
-                                <option value="Kerala University, Thiruvananthapuram">Kerala University, Thiruvananthapuram</option>
-                                <option value="Mahatma Gandhi University, Kottayam">Mahatma Gandhi University, Kottayam</option>
-                                <option value="Calicut University">Calicut University</option>
-                                <option value="Kannur University">Kannur University</option>
-                                <option value="APJ Abdul Kalam Technological University">APJ Abdul Kalam Technological University</option>
-                            </optgroup>
-
-                            <optgroup label="🇮🇳 National Institutions">
+                            <optgroup label="🏛️ Top Engineering Institutes (IITs/NITs)">
                                 <option value="IIT Bombay">IIT Bombay</option>
                                 <option value="IIT Delhi">IIT Delhi</option>
                                 <option value="IIT Madras">IIT Madras</option>
+                                <option value="IIT Kanpur">IIT Kanpur</option>
+                                <option value="IIT Kharagpur">IIT Kharagpur</option>
+                                <option value="IIT Roorkee">IIT Roorkee</option>
+                                <option value="IIT Guwahati">IIT Guwahati</option>
+                                <option value="IIT Hyderabad">IIT Hyderabad</option>
                                 <option value="NIT Calicut">NIT Calicut</option>
                                 <option value="NIT Trichy">NIT Trichy</option>
-                                <option value="BITS Pilani">BITS Pilani</option>
-                                <option value="Delhi University">Delhi University</option>
-                                <option value="SRM University">SRM University</option>
-                                <option value="VIT Vellore">VIT Vellore</option>
-                                <option value="Manipal Institute">Manipal Institute</option>
-                                <option value="Amity University">Amity University</option>
-                                <option value="Anna University">Anna University</option>
-                                <option value="Christ University Bangalore">Christ University Bangalore</option>
-                                <option value="Symbiosis International">Symbiosis International</option>
+                                <option value="NIT Surathkal">NIT Surathkal</option>
+                                <option value="NIT Warangal">NIT Warangal</option>
+                                <option value="NIT Rourkela">NIT Rourkela</option>
                             </optgroup>
 
-                            <option value="Other / Not Listed">Other / Not Listed</option>
+                            <optgroup label="🎓 Private & Deemed Universities">
+                                <option value="BITS Pilani">BITS Pilani</option>
+                                <option value="BITS Goa">BITS Goa</option>
+                                <option value="BITS Hyderabad">BITS Hyderabad</option>
+                                <option value="VIT Vellore">VIT Vellore</option>
+                                <option value="SRM University">SRM University</option>
+                                <option value="Manipal Institute of Technology">Manipal Institute of Technology</option>
+                                <option value="Amrita Vishwa Vidyapeetham">Amrita Vishwa Vidyapeetham</option>
+                                <option value="Christ University Bangalore">Christ University Bangalore</option>
+                                <option value="Symbiosis International">Symbiosis International</option>
+                                <option value="Amity University">Amity University</option>
+                                <option value="Lovely Professional University (LPU)">Lovely Professional University (LPU)</option>
+                                <option value="Chandigarh University">Chandigarh University</option>
+                                <option value="Thapar Institute of Engineering and Technology">Thapar Institute of Engineering and Technology</option>
+                                <option value="KIIT University">KIIT University</option>
+                            </optgroup>
+
+                            <optgroup label="🏫 Leading Central & State Universities">
+                                <option value="Delhi University">Delhi University</option>
+                                <option value="Jawaharlal Nehru University (JNU)">Jawaharlal Nehru University (JNU)</option>
+                                <option value="Banaras Hindu University (BHU)">Banaras Hindu University (BHU)</option>
+                                <option value="Jamia Millia Islamia">Jamia Millia Islamia</option>
+                                <option value="University of Mumbai">University of Mumbai</option>
+                                <option value="University of Calcutta">University of Calcutta</option>
+                                <option value="Jadavpur University">Jadavpur University</option>
+                                <option value="Savitribai Phule Pune University">Savitribai Phule Pune University</option>
+                                <option value="Osmania University">Osmania University</option>
+                                <option value="University of Hyderabad">University of Hyderabad</option>
+                                <option value="Aligarh Muslim University">Aligarh Muslim University</option>
+                                <option value="Anna University">Anna University</option>
+                            </optgroup>
+
+                            <optgroup label="📚 Top Arts & Science Colleges">
+                                <option value="St. Xavier's College (Mumbai/Kolkata)">St. Xavier's College (Mumbai/Kolkata)</option>
+                                <option value="SRCC Delhi">SRCC Delhi</option>
+                                <option value="Loyola College Chennai">Loyola College Chennai</option>
+                                <option value="Fergusson College Pune">Fergusson College Pune</option>
+                                <option value="Shiv Nadar University">Shiv Nadar University</option>
+                                <option value="Ashoka University">Ashoka University</option>
+                            </optgroup>
+
+                            <option value="Other">Other / Not Listed</option>
                         </select>
                     </div>
+
+                    {/* Conditional Other College Input */}
+                    { (formData.college === '' || !['IIT Bombay', 'IIT Delhi', 'IIT Madras', 'IIT Kanpur', 'IIT Kharagpur', 'IIT Roorkee', 'IIT Guwahati', 'IIT Hyderabad', 'NIT Calicut', 'NIT Trichy', 'NIT Surathkal', 'NIT Warangal', 'NIT Rourkela', 'BITS Pilani', 'BITS Goa', 'BITS Hyderabad', 'Anna University', 'VIT Vellore', 'SRM University', 'Manipal Institute of Technology', 'Amrita Vishwa Vidyapeetham', 'Delhi University', 'Jawaharlal Nehru University (JNU)', 'Banaras Hindu University (BHU)', 'Jamia Millia Islamia', 'University of Mumbai', 'University of Calcutta', 'Jadavpur University', 'Savitribai Phule Pune University', 'Osmania University', 'University of Hyderabad', 'Aligarh Muslim University', 'Christ University Bangalore', 'Symbiosis International', 'St. Xavier\'s College (Mumbai/Kolkata)', 'SRCC Delhi', 'Loyola College Chennai', 'Fergusson College Pune', 'Amity University', 'Lovely Professional University (LPU)', 'Chandigarh University', 'Thapar Institute of Engineering and Technology', 'KIIT University', 'Shiv Nadar University', 'Ashoka University'].includes(formData.college)) && formData.college !== undefined && (
+                        <div className="animate-fade-in">
+                            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-2">Enter College Name</label>
+                            <input 
+                                type="text"
+                                placeholder="Specify your Institution"
+                                className="w-full px-5 py-3.5 bg-slate-100 border-none rounded-2xl text-slate-900 font-bold focus:ring-2 focus:ring-orange-400 transition-all outline-none"
+                                value={formData.college === 'Other' ? '' : formData.college}
+                                onChange={(e) => setFormData({...formData, college: e.target.value})}
+                            />
+                        </div>
+                    )}
 
                     <button 
                         type="submit"
@@ -217,7 +212,7 @@ const RegistrationScreen = ({ onRegister, audioManager }) => {
                     </button>
                 </form>
 
-                <p className="mt-8 text-[9px] text-slate-400 font-bold text-center uppercase tracking-widest leading-relaxed">
+                <p className="mt-6 sm:mt-8 text-[8px] sm:text-[9px] text-slate-400 font-bold text-center uppercase tracking-widest leading-relaxed">
                     By enrolling, you agree to the urban scout protocol and data privacy measures of Mind Empowered.
                 </p>
             </div>

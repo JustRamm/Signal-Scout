@@ -3,23 +3,23 @@ import CitySquareScenery from '../components/CitySquareScenery';
 
 const TutorialScreen = ({ onStart }) => {
     return (
-        <div className="absolute inset-0 z-[300] bg-slate-900/95 backdrop-blur-xl flex items-center justify-center p-6">
+        <div className="absolute inset-0 z-[300] bg-slate-900/95 backdrop-blur-xl flex items-center justify-center p-4 sm:p-6">
             {/* Real Backdrop */}
             <div className="absolute inset-0 z-0">
                 <CitySquareScenery />
             </div>
 
-            <div className="bg-white rounded-[32px] max-w-lg w-full p-8 md:p-10 shadow-2xl relative overflow-hidden animate-scale-in text-center">
+            <div className="bg-white rounded-[24px] sm:rounded-[32px] max-w-lg w-full p-6 sm:p-8 md:p-10 shadow-2xl relative overflow-hidden animate-scale-in text-center">
 
                 <div className="relative z-10">
-                    <div className="w-16 h-16 bg-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg rotate-3">
-                        <span className="text-3xl text-white font-bold">🔭</span>
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 bg-orange-500 rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-lg rotate-3">
+                        <span className="text-2xl sm:text-3xl text-white font-bold">🔭</span>
                     </div>
                     
-                    <h2 className="text-3xl font-black text-slate-900 mb-2 tracking-tight uppercase">Signal Scout</h2>
-                    <p className="text-orange-500/80 font-black uppercase text-[10px] tracking-[0.3em] mb-6">Urban Compassion System</p>
+                    <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mb-1 sm:mb-2 tracking-tight uppercase">Signal Scout</h2>
+                    <p className="text-orange-500/80 font-black uppercase text-[8px] sm:text-[10px] tracking-[0.2em] sm:tracking-[0.3em] mb-4 sm:mb-6">Urban Compassion System</p>
                     
-                    <p className="text-slate-600 mb-8 max-w-md mx-auto leading-relaxed text-sm">
+                    <p className="text-slate-600 mb-6 sm:mb-8 max-w-md mx-auto leading-relaxed text-[13px] sm:text-sm">
                         In this busy city square, some people are struggling silently. Your mission is to <strong className="text-slate-900 underline decoration-orange-300">identify silent cries for help</strong> and provide support.
                     </p>
 

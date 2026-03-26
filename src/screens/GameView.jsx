@@ -16,7 +16,7 @@ const GameView = ({
         <div className="flex-1 flex flex-col relative overflow-hidden">
             {/* Binocular Vignette Effect */}
             <div className="absolute inset-0 z-40 pointer-events-none opacity-50 mix-blend-multiply"
-                style={{ background: 'radial-gradient(circle at center, transparent min(30vw, 30vh), #000 min(80vw, 80vh))' }}>
+                style={{ background: 'radial-gradient(circle at center, transparent min(40vw, 40vh), #000 min(95vw, 95vh))' }}>
             </div>
 
             {/* Header / HUD */}
@@ -28,19 +28,19 @@ const GameView = ({
                     >
                         ✕
                     </button>
-                    <div className="bg-slate-900/80 backdrop-blur-md px-4 py-2 rounded-xl border-l-4 border-teal-500 shadow-lg">
-                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest block mb-0.5">Score</span>
-                        <span className="text-2xl font-black text-white leading-none">{score}</span>
+                    <div className="bg-slate-900/80 backdrop-blur-md px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl border-l-4 border-teal-500 shadow-lg">
+                        <span className="text-[8px] sm:text-[10px] text-slate-400 font-bold uppercase tracking-widest block mb-0.5">Score</span>
+                        <span className="text-xl sm:text-2xl font-black text-white leading-none whitespace-nowrap">{score}</span>
                     </div>
                 </div>
 
                 {/* Progress Bar (Center) */}
-                <div className="flex-1 max-w-[40%] mt-2 px-10">
-                    <div className="flex justify-between items-end mb-1.5 px-1">
-                        <span className="text-[10px] font-black text-white/50 uppercase tracking-[0.2em]">Urban Progress</span>
-                        <span className="text-[10px] font-black text-white uppercase tracking-widest">{Math.round(gameProgress)}%</span>
+                <div className="flex-1 max-w-[45%] sm:max-w-[40%] mt-1 sm:mt-2 px-3 sm:px-10">
+                    <div className="flex justify-between items-end mb-1 sm:mb-1.5 px-0.5 sm:px-1">
+                        <span className="text-[8px] sm:text-[10px] font-black text-white/50 uppercase tracking-[0.1em] sm:tracking-[0.2em] truncate">Urban Progress</span>
+                        <span className="text-[8px] sm:text-[10px] font-black text-white uppercase tracking-widest ml-1">{Math.round(gameProgress)}%</span>
                     </div>
-                    <div className="h-4 w-full bg-slate-900/50 backdrop-blur-md rounded-full border border-white/10 p-[3px] shadow-inner overflow-hidden">
+                    <div className="h-3 sm:h-4 w-full bg-slate-900/50 backdrop-blur-md rounded-full border border-white/10 p-[2px] sm:p-[3px] shadow-inner overflow-hidden">
                         <div 
                             className="h-full bg-gradient-to-r from-teal-500 to-emerald-400 rounded-full transition-all duration-500 shadow-[0_0_15px_rgba(45,212,191,0.4)]"
                             style={{ width: `${gameProgress}%` }}
@@ -51,9 +51,9 @@ const GameView = ({
                 <div className="flex flex-col gap-2 pointer-events-auto">
                     <button
                         onClick={onTogglePause}
-                        className="px-6 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-xl text-white text-[10px] font-black uppercase tracking-widest border border-white/10 transition-all active:scale-95 shadow-lg"
+                        className="px-4 sm:px-6 py-1.5 sm:py-2 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-xl text-white text-[8px] sm:text-[10px] font-black uppercase tracking-widest border border-white/10 transition-all active:scale-95 shadow-lg whitespace-nowrap"
                     >
-                        {isPaused ? '▶ Resume' : '‖ Pause'}
+                        {isPaused ? '▶' : '‖ Pause'}
                     </button>
                 </div>
             </div>
@@ -118,10 +118,10 @@ const GameView = ({
                             ${feedback.type === 'good' ? 'bg-teal-900/70 text-white border-teal-500/50' : 'bg-red-900/70 text-white border-red-500/50'}
                         `}
                         style={{ 
-                            left: '20%',
+                            left: '50%',
                             top: '50%',
                             transform: 'translate(-50%, -50%)',
-                            width: 'clamp(220px, 70vw, 300px)',
+                            width: 'clamp(260px, 85vw, 360px)',
                         }}
                     >
                         {/* Score Float */}

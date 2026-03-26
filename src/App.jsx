@@ -23,7 +23,7 @@ function App() {
   };
 
   return (
-    <div className="w-full h-screen overflow-hidden bg-slate-900">
+    <div className="w-full h-screen overflow-hidden bg-slate-900 flex items-center justify-center">
       {!gameStarted ? (
         <SplashScreen onStart={handleStart} />
       ) : (

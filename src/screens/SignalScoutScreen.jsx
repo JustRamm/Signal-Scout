@@ -5,6 +5,7 @@ import RegistrationScreen from './RegistrationScreen';
 import GameView from './GameView';
 import GameOverScreen from './GameOverScreen';
 import PauseOverlay from '../components/PauseOverlay';
+import RatingScreen from './RatingScreen';
 import { supabase } from '../utils/supabase';
 
 const SignalScoutScreen = ({ audioManager, onExit, isPaused: externalPaused = false }) => {
