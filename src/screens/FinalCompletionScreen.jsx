@@ -4,7 +4,7 @@ import CitySquareScenery from '../components/CitySquareScenery';
 const FinalCompletionScreen = ({ onRestart, onExit }) => {
     return (
         <div className="absolute inset-0 z-[500] bg-slate-900/98 backdrop-blur-3xl flex items-center justify-center p-6 text-center animate-fade-in">
-             <div className="absolute inset-0 z-0">
+            <div className="absolute inset-0 z-0">
                 <CitySquareScenery />
             </div>
 
@@ -17,23 +17,23 @@ const FinalCompletionScreen = ({ onRestart, onExit }) => {
 
                 <h2 className="text-3xl font-black text-slate-900 mb-2 uppercase tracking-tight">Response Recorded</h2>
                 <p className="text-emerald-600 font-black uppercase text-[10px] tracking-[0.3em] mb-8">Mission Accomplished</p>
-                
+
                 <div className="bg-slate-50 rounded-2xl p-6 mb-10 border border-slate-100">
                     <p className="text-slate-600 leading-relaxed font-medium">
-                        Thank you for playing. Your insights as an urban scout help strengthen our community's compassion network. 
-                        <br/><br/>
+                        Thank you for playing. Your insights as an urban scout help strengthen our community's compassion network.
+                        <br /><br />
                         <strong className="text-slate-900">I hope you'll identify these silent distress signals even more quickly in the real world.</strong>
                     </p>
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4">
-                    <button 
+                    <button
                         onClick={onRestart}
                         className="flex-1 py-4 bg-orange-500 hover:bg-orange-600 text-white font-black uppercase tracking-widest rounded-2xl shadow-xl shadow-orange-500/20 transition-all hover:scale-[1.02] active:scale-95 text-sm"
                     >
                         Restart Game ↺
                     </button>
-                    <button 
+                    <button
                         onClick={onExit}
                         className="flex-1 py-4 bg-slate-900 hover:bg-black text-white font-black uppercase tracking-widest rounded-2xl shadow-xl transition-all hover:scale-[1.02] active:scale-95 text-sm"
                     >

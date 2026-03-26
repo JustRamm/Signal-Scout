@@ -455,16 +455,15 @@ class SoundEngine {
 
         const nodes = [];
 
-        // Special handling for Park Theme with MP3
+        // Special handling for Park Theme - Default to bc.mp3
         if (theme === 'park') {
-            const buffer = await this.getBuffer('/ThemeAudio/park.mp3') || await this.getBuffer('/ThemeAudio/bc.mp3');
+            const buffer = await this.getBuffer('/ThemeAudio/bc.mp3');
             if (buffer) {
                 const source = this.ctx.createBufferSource();
                 source.buffer = buffer;
                 source.loop = true;
                 const gain = this.ctx.createGain();
 
-                // Softer volume for background with fade-in
                 gain.gain.setValueAtTime(0.001, this.ctx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.2, this.ctx.currentTime + 2);
 
@@ -478,20 +477,19 @@ class SoundEngine {
                 source.start();
                 nodes.push({ source, gain });
                 this.musicNodes = nodes;
-                return; // Exit early, don't play synth pad if MP3 works
+                return;
             }
         }
 
-        // Special handling for Campus Theme with MP3
+        // Special handling for Campus Theme - Default to bc.mp3
         if (theme === 'campus') {
-            const buffer = await this.getBuffer('/ThemeAudio/campus.mp3') || await this.getBuffer('/ThemeAudio/bc.mp3');
+            const buffer = await this.getBuffer('/ThemeAudio/bc.mp3');
             if (buffer) {
                 const source = this.ctx.createBufferSource();
                 source.buffer = buffer;
                 source.loop = true;
                 const gain = this.ctx.createGain();
 
-                // Reduced volume as requested with fade-in
                 gain.gain.setValueAtTime(0.001, this.ctx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.1, this.ctx.currentTime + 2);
 
@@ -505,7 +503,7 @@ class SoundEngine {
                 source.start();
                 nodes.push({ source, gain });
                 this.musicNodes = nodes;
-                return; // Exit early
+                return;
             }
         }
 

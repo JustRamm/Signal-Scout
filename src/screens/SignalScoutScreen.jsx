@@ -30,8 +30,6 @@ const SignalScoutScreen = ({ audioManager, onExit, isPaused: externalPaused = fa
 
         if (gameState === 'REGISTRATION' || gameState === 'INTRO') {
             audioManager.playMenuMusic();
-        } else if (gameState === 'PLAYING') {
-            audioManager.startAmbient('park'); // Use 'park' as default city vibe
         } else if (gameState === 'COMPLETED') {
             audioManager.playVictory();
         }

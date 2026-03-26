@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import CitySquareScenery from '../components/CitySquareScenery';
 
-const SplashScreen = ({ onStart, audioManager }) => {
+const SplashScreen = ({ onStart, audioManager, onLogoClick }) => {
     const [progress, setProgress] = useState(0);
     const [status, setStatus] = useState('Establishing connection...');
 
@@ -51,7 +51,10 @@ const SplashScreen = ({ onStart, audioManager }) => {
             <div className="relative z-10 flex flex-col items-center max-w-lg w-full px-8 text-center">
                 
                 {/* Pulsing Logo Container */}
-                <div className="relative mb-10 group">
+                <div 
+                    className="relative mb-10 group cursor-pointer active:scale-95 transition-transform"
+                    onClick={onLogoClick}
+                >
                     <div className="absolute inset-0 bg-orange-500/20 blur-[60px] rounded-full animate-pulse-slow"></div>
                     <div className="w-28 h-28 bg-white/5 backdrop-blur-2xl rounded-[40px] border border-white/20 flex items-center justify-center shadow-[0_0_50px_rgba(251,146,60,0.2)] relative overflow-hidden">
                         <img 
