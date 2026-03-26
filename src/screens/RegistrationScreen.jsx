@@ -1,30 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CitySquareScenery from '../components/CitySquareScenery';
+import { INSTITUTIONS } from '../data/institutions';
 
 const RegistrationScreen = ({ onRegister, audioManager }) => {
     const [formData, setFormData] = useState({
         name: '',
         age: '',
+        state: '',
+        university: '',
         college: '',
-        state: ''
+        manualCollege: ''
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const states = [
-        "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat", "Haryana", 
-        "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", 
-        "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", 
-        "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal"
-    ];
+    const states = Object.keys(INSTITUTIONS).sort();
+    const universities = formData.state ? Object.keys(INSTITUTIONS[formData.state] || {}).sort() : [];
+    const colleges = (formData.state && formData.university) ? (INSTITUTIONS[formData.state][formData.university] || []).sort() : [];
+
+    const isOther = formData.college === 'Other' || formData.university === 'Other University' || (formData.state && !states.includes(formData.state));
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError(null);
 
+        const finalCollege = isOther ? (formData.manualCollege || formData.college) : formData.college;
+
         // Validation
-        if (!formData.name || !formData.age || !formData.college || !formData.state) {
-            setError("Please fill in all the details.");
+        if (!formData.name || !formData.age || !formData.state || !formData.university || !finalCollege) {
+            setError("Please fill in all the required details.");
             if (audioManager) audioManager.playSad();
             return;
         }
@@ -38,7 +42,10 @@ const RegistrationScreen = ({ onRegister, audioManager }) => {
         if (audioManager) audioManager.playConfirm();
 
         try {
-            await onRegister(formData);
+            await onRegister({
+                ...formData,
+                college: finalCollege // Use the resolved college name
+            });
         } catch (err) {
             setError("Failed to register. Please try again.");
             console.error(err);
@@ -54,7 +61,7 @@ const RegistrationScreen = ({ onRegister, audioManager }) => {
                 <CitySquareScenery showTrees={true} showLights={true} />
             </div>
 
-            <div className="relative z-10 w-full max-w-md bg-white/95 backdrop-blur-2xl rounded-[24px] sm:rounded-[32px] p-6 sm:p-8 md:p-10 shadow-3xl border border-white/20 animate-scale-in">
+            <div className="relative z-10 w-full max-w-md bg-white/95 backdrop-blur-2xl rounded-[24px] sm:rounded-[32px] p-6 sm:p-8 md:p-10 shadow-3xl border border-white/20 animate-scale-in my-8">
                 <div className="text-center mb-6 sm:mb-8">
                     <div className="w-12 h-12 sm:w-16 sm:h-16 bg-orange-500 rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 shadow-lg">
                         <svg className="w-8 h-8 text-white fill-current" viewBox="0 0 24 24">
@@ -66,43 +73,43 @@ const RegistrationScreen = ({ onRegister, audioManager }) => {
                 </div>
 
                 {error && (
-                    <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-lg text-red-600 text-sm font-bold animate-shake">
+                    <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-lg text-red-600 text-[11px] font-bold animate-shake">
                         {error}
                     </div>
                 )}
 
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-3.5">
                     {/* Name */}
                     <div>
-                        <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-2">Full Name</label>
+                        <label className="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-2">Full Name</label>
                         <input 
                             type="text"
                             placeholder="e.g. Abhiram S"
-                            className="w-full px-5 py-3.5 bg-slate-100 border-none rounded-2xl text-slate-900 font-bold focus:ring-2 focus:ring-orange-400 transition-all outline-none"
+                            className="w-full px-5 py-3 bg-slate-100 border-none rounded-2xl text-slate-900 font-bold focus:ring-2 focus:ring-orange-400 transition-all outline-none"
                             value={formData.name}
                             onChange={(e) => setFormData({...formData, name: e.target.value})}
                         />
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 gap-3.5">
                         {/* Age */}
                         <div>
-                            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-2">Age</label>
+                            <label className="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-2">Age</label>
                             <input 
                                 type="number"
                                 placeholder="Age"
-                                className="w-full px-5 py-3.5 bg-slate-100 border-none rounded-2xl text-slate-900 font-bold focus:ring-2 focus:ring-orange-400 transition-all outline-none"
+                                className="w-full px-5 py-3 bg-slate-100 border-none rounded-2xl text-slate-900 font-bold focus:ring-2 focus:ring-orange-400 transition-all outline-none"
                                 value={formData.age}
                                 onChange={(e) => setFormData({...formData, age: e.target.value})}
                             />
                         </div>
                         {/* State Dropdown */}
                         <div>
-                            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-2">State</label>
+                            <label className="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-2">State</label>
                             <select 
-                                className="w-full px-5 py-3.5 bg-slate-100 border-none rounded-2xl text-slate-900 font-bold focus:ring-2 focus:ring-orange-400 transition-all outline-none appearance-none"
+                                className="w-full px-5 py-3 bg-slate-100 border-none rounded-2xl text-slate-900 font-bold focus:ring-2 focus:ring-orange-400 transition-all outline-none appearance-none"
                                 value={formData.state}
-                                onChange={(e) => setFormData({...formData, state: e.target.value})}
+                                onChange={(e) => setFormData({...formData, state: e.target.value, university: '', college: ''})}
                             >
                                 <option value="">Select State</option>
                                 {states.map(s => <option key={s} value={s}>{s}</option>)}
@@ -110,94 +117,47 @@ const RegistrationScreen = ({ onRegister, audioManager }) => {
                         </div>
                     </div>
 
+                    {/* University Dropdown */}
+                    {formData.state && (
+                        <div className="animate-fade-in text-left">
+                            <label className="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-2">University / Board</label>
+                            <select 
+                                className="w-full px-5 py-3 bg-slate-100 border-none rounded-2xl text-slate-900 font-bold focus:ring-2 focus:ring-orange-400 transition-all outline-none appearance-none"
+                                value={formData.university}
+                                onChange={(e) => setFormData({...formData, university: e.target.value, college: ''})}
+                            >
+                                <option value="">Select University</option>
+                                {universities.map(u => <option key={u} value={u}>{u}</option>)}
+                            </select>
+                        </div>
+                    )}
+
                     {/* College Dropdown */}
-                    <div>
-                        <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-2">College / Institution</label>
-                        <select 
-                            className="w-full px-5 py-3.5 bg-slate-100 border-none rounded-2xl text-slate-900 font-bold focus:ring-2 focus:ring-orange-400 transition-all outline-none appearance-none"
-                            value={formData.college === 'Other' || !['IIT Bombay', 'IIT Delhi', 'IIT Madras', 'IIT Kanpur', 'IIT Kharagpur', 'IIT Roorkee', 'IIT Guwahati', 'IIT Hyderabad', 'NIT Calicut', 'NIT Trichy', 'NIT Surathkal', 'NIT Warangal', 'NIT Rourkela', 'BITS Pilani', 'BITS Goa', 'BITS Hyderabad', 'Anna University', 'VIT Vellore', 'SRM University', 'Manipal Institute of Technology', 'Amrita Vishwa Vidyapeetham', 'Delhi University', 'Jawaharlal Nehru University (JNU)', 'Banaras Hindu University (BHU)', 'Jamia Millia Islamia', 'University of Mumbai', 'University of Calcutta', 'Jadavpur University', 'Savitribai Phule Pune University', 'Osmania University', 'University of Hyderabad', 'Aligarh Muslim University', 'Christ University Bangalore', 'Symbiosis International', 'St. Xavier\'s College (Mumbai/Kolkata)', 'SRCC Delhi', 'Loyola College Chennai', 'Fergusson College Pune', 'Amity University', 'Lovely Professional University (LPU)', 'Chandigarh University', 'Thapar Institute of Engineering and Technology', 'KIIT University', 'Shiv Nadar University', 'Ashoka University'].includes(formData.college) ? 'Other' : formData.college}
-                            onChange={(e) => {
-                                const val = e.target.value;
-                                if (val === 'Other') {
-                                    setFormData({...formData, college: ''});
-                                } else {
-                                    setFormData({...formData, college: val});
-                                }
-                            }}
-                        >
-                            <option value="">Select College</option>
-
-                            <optgroup label="🏛️ Top Engineering Institutes (IITs/NITs)">
-                                <option value="IIT Bombay">IIT Bombay</option>
-                                <option value="IIT Delhi">IIT Delhi</option>
-                                <option value="IIT Madras">IIT Madras</option>
-                                <option value="IIT Kanpur">IIT Kanpur</option>
-                                <option value="IIT Kharagpur">IIT Kharagpur</option>
-                                <option value="IIT Roorkee">IIT Roorkee</option>
-                                <option value="IIT Guwahati">IIT Guwahati</option>
-                                <option value="IIT Hyderabad">IIT Hyderabad</option>
-                                <option value="NIT Calicut">NIT Calicut</option>
-                                <option value="NIT Trichy">NIT Trichy</option>
-                                <option value="NIT Surathkal">NIT Surathkal</option>
-                                <option value="NIT Warangal">NIT Warangal</option>
-                                <option value="NIT Rourkela">NIT Rourkela</option>
-                            </optgroup>
-
-                            <optgroup label="🎓 Private & Deemed Universities">
-                                <option value="BITS Pilani">BITS Pilani</option>
-                                <option value="BITS Goa">BITS Goa</option>
-                                <option value="BITS Hyderabad">BITS Hyderabad</option>
-                                <option value="VIT Vellore">VIT Vellore</option>
-                                <option value="SRM University">SRM University</option>
-                                <option value="Manipal Institute of Technology">Manipal Institute of Technology</option>
-                                <option value="Amrita Vishwa Vidyapeetham">Amrita Vishwa Vidyapeetham</option>
-                                <option value="Christ University Bangalore">Christ University Bangalore</option>
-                                <option value="Symbiosis International">Symbiosis International</option>
-                                <option value="Amity University">Amity University</option>
-                                <option value="Lovely Professional University (LPU)">Lovely Professional University (LPU)</option>
-                                <option value="Chandigarh University">Chandigarh University</option>
-                                <option value="Thapar Institute of Engineering and Technology">Thapar Institute of Engineering and Technology</option>
-                                <option value="KIIT University">KIIT University</option>
-                            </optgroup>
-
-                            <optgroup label="🏫 Leading Central & State Universities">
-                                <option value="Delhi University">Delhi University</option>
-                                <option value="Jawaharlal Nehru University (JNU)">Jawaharlal Nehru University (JNU)</option>
-                                <option value="Banaras Hindu University (BHU)">Banaras Hindu University (BHU)</option>
-                                <option value="Jamia Millia Islamia">Jamia Millia Islamia</option>
-                                <option value="University of Mumbai">University of Mumbai</option>
-                                <option value="University of Calcutta">University of Calcutta</option>
-                                <option value="Jadavpur University">Jadavpur University</option>
-                                <option value="Savitribai Phule Pune University">Savitribai Phule Pune University</option>
-                                <option value="Osmania University">Osmania University</option>
-                                <option value="University of Hyderabad">University of Hyderabad</option>
-                                <option value="Aligarh Muslim University">Aligarh Muslim University</option>
-                                <option value="Anna University">Anna University</option>
-                            </optgroup>
-
-                            <optgroup label="📚 Top Arts & Science Colleges">
-                                <option value="St. Xavier's College (Mumbai/Kolkata)">St. Xavier's College (Mumbai/Kolkata)</option>
-                                <option value="SRCC Delhi">SRCC Delhi</option>
-                                <option value="Loyola College Chennai">Loyola College Chennai</option>
-                                <option value="Fergusson College Pune">Fergusson College Pune</option>
-                                <option value="Shiv Nadar University">Shiv Nadar University</option>
-                                <option value="Ashoka University">Ashoka University</option>
-                            </optgroup>
-
-                            <option value="Other">Other / Not Listed</option>
-                        </select>
-                    </div>
+                    {formData.university && formData.university !== 'Other University' && (
+                        <div className="animate-fade-in text-left">
+                            <label className="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-2">College Name</label>
+                            <select 
+                                className="w-full px-5 py-3 bg-slate-100 border-none rounded-2xl text-slate-900 font-bold focus:ring-2 focus:ring-orange-400 transition-all outline-none appearance-none font-bold"
+                                value={formData.college}
+                                onChange={(e) => setFormData({...formData, college: e.target.value})}
+                            >
+                                <option value="">Select Institution</option>
+                                {colleges.map(c => <option key={c} value={c}>{c}</option>)}
+                            </select>
+                        </div>
+                    )}
 
                     {/* Conditional Other College Input */}
-                    { (formData.college === '' || !['IIT Bombay', 'IIT Delhi', 'IIT Madras', 'IIT Kanpur', 'IIT Kharagpur', 'IIT Roorkee', 'IIT Guwahati', 'IIT Hyderabad', 'NIT Calicut', 'NIT Trichy', 'NIT Surathkal', 'NIT Warangal', 'NIT Rourkela', 'BITS Pilani', 'BITS Goa', 'BITS Hyderabad', 'Anna University', 'VIT Vellore', 'SRM University', 'Manipal Institute of Technology', 'Amrita Vishwa Vidyapeetham', 'Delhi University', 'Jawaharlal Nehru University (JNU)', 'Banaras Hindu University (BHU)', 'Jamia Millia Islamia', 'University of Mumbai', 'University of Calcutta', 'Jadavpur University', 'Savitribai Phule Pune University', 'Osmania University', 'University of Hyderabad', 'Aligarh Muslim University', 'Christ University Bangalore', 'Symbiosis International', 'St. Xavier\'s College (Mumbai/Kolkata)', 'SRCC Delhi', 'Loyola College Chennai', 'Fergusson College Pune', 'Amity University', 'Lovely Professional University (LPU)', 'Chandigarh University', 'Thapar Institute of Engineering and Technology', 'KIIT University', 'Shiv Nadar University', 'Ashoka University'].includes(formData.college)) && formData.college !== undefined && (
-                        <div className="animate-fade-in">
-                            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-2">Enter College Name</label>
+                    { isOther && (
+                        <div className="animate-fade-in text-left">
+                            <label className="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-2">Specify College Name</label>
                             <input 
                                 type="text"
-                                placeholder="Specify your Institution"
-                                className="w-full px-5 py-3.5 bg-slate-100 border-none rounded-2xl text-slate-900 font-bold focus:ring-2 focus:ring-orange-400 transition-all outline-none"
-                                value={formData.college === 'Other' ? '' : formData.college}
-                                onChange={(e) => setFormData({...formData, college: e.target.value})}
+                                placeholder="Enter Institution Name..."
+                                className="w-full px-5 py-3 bg-slate-100 border-none rounded-2xl text-slate-900 font-bold focus:ring-2 focus:ring-orange-400 transition-all outline-none"
+                                value={formData.manualCollege || (formData.university === 'Other University' ? '' : formData.college)}
+                                onChange={(e) => setFormData({...formData, manualCollege: e.target.value})}
+                                autoFocus
                             />
                         </div>
                     )}
@@ -205,7 +165,7 @@ const RegistrationScreen = ({ onRegister, audioManager }) => {
                     <button 
                         type="submit"
                         disabled={loading}
-                        className="w-full mt-6 py-4 bg-orange-500 hover:bg-orange-600 disabled:bg-slate-300 text-white rounded-2xl font-black uppercase tracking-widest text-sm shadow-xl shadow-orange-200 transition-all transform active:scale-95 flex items-center justify-center gap-2"
+                        className="w-full mt-4 py-4 bg-orange-500 hover:bg-orange-600 disabled:bg-slate-300 text-white rounded-2xl font-black uppercase tracking-widest text-sm shadow-xl shadow-orange-200 transition-all transform active:scale-95 flex items-center justify-center gap-2"
                     >
                         {loading ? 'Processing...' : 'Complete Enrollment'}
                         {!loading && <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>}
