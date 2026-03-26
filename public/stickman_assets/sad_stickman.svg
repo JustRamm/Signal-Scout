@@ -1,0 +1,7 @@
+<svg viewBox="0 0 100 150" xmlns="http://www.w3.org/2000/svg">
+  <path d="M50 45 c-10 0 -18 -8 -18 -18 s8 -18 18 -18 s18 8 18 18 s-8 18 -18 18 Z" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" />
+  <path d="M50 45 c-5 15 -10 30 -5 55" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" />
+  <path d="M45 55 c-10 10 -15 25 -5 35" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" />
+  <path d="M55 55 c10 10 15 25 5 35" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" />
+  <path d="M45 100 l-15 35 M55 100 l15 35" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" />
+</svg>

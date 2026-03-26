@@ -1,0 +1,8 @@
+<svg viewBox="0 0 100 150" xmlns="http://www.w3.org/2000/svg">
+  <path d="M30 65 c0 -15 40 -15 40 0 c0 15 -10 20 -20 20 s-20 -5 -20 -20 Z" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" />
+  <path d="M50 78 c-10 0 -17 -7 -17 -17 s7 -17 17 -17 s17 7 17 17 s-7 17 -17 17 Z" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" />
+  <path d="M50 82 l-15 35 l30 0 Z" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+  <!-- Crouching Legs -->
+  <path d="M35 117 l-10 20" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" />
+  <path d="M65 117 l10 20" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" />
+</svg>

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Gradient Background Circle (Sunset Themed) -->
+  <defs>
+    <linearGradient id="logoBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" /> <!-- Indigo 600 (Lighter) -->
+      <stop offset="100%" style="stop-color:#fdba74;stop-opacity:1" /> <!-- Orange 300 (Lighter) -->
+    </linearGradient>
+  </defs>
+  
+  <circle cx="50" cy="50" r="48" fill="url(#logoBg)" stroke="white" stroke-width="2" />
+  
+  <!-- Stickman Medic Group (Centered) -->
+  <g transform="translate(10, 5) scale(0.8)">
+    <!-- Hat -->
+    <rect x="40" y="10" width="20" height="10" fill="white" opacity="0.5" />
+    <circle cx="50" cy="15" r="3" fill="white" />
+    
+    <!-- Head -->
+    <circle cx="50" cy="25" r="12" fill="none" stroke="white" stroke-width="4" />
+    <!-- Body -->
+    <line x1="50" y1="37" x2="50" y2="70" stroke="white" stroke-width="4" stroke-linecap="round" />
+    <!-- Legs -->
+    <line x1="50" y1="70" x2="30" y2="100" stroke="white" stroke-width="4" stroke-linecap="round" />
+    <line x1="50" y1="70" x2="70" y2="100" stroke="white" stroke-width="4" stroke-linecap="round" />
+    <!-- Arms -->
+    <line x1="50" y1="45" x2="25" y2="35" stroke="white" stroke-width="4" stroke-linecap="round" />
+    <line x1="50" y1="45" x2="75" y2="55" stroke="white" stroke-width="4" stroke-linecap="round" />
+    
+    <!-- Cross Symbol -->
+    <line x1="15" y1="45" x2="25" y2="45" stroke="#ef4444" stroke-width="3" stroke-linecap="round" />
+    <line x1="20" y1="40" x2="20" y2="50" stroke="#ef4444" stroke-width="3" stroke-linecap="round" />
+  </g>
+
+  <!-- High-tech Scanning Rings -->
+  <circle cx="50" cy="50" r="44" fill="none" stroke="white" stroke-width="0.5" stroke-dasharray="10 5" opacity="0.3" />
+</svg>
