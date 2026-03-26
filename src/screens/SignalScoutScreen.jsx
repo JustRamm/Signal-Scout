@@ -6,11 +6,12 @@ import GameView from './GameView';
 import GameOverScreen from './GameOverScreen';
 import PauseOverlay from '../components/PauseOverlay';
 import RatingScreen from './RatingScreen';
+import FinalCompletionScreen from './FinalCompletionScreen';
 import { supabase } from '../utils/supabase';
 
 const SignalScoutScreen = ({ audioManager, onExit, isPaused: externalPaused = false }) => {
     // Game State
-    const [gameState, setGameState] = useState('REGISTRATION'); // REGISTRATION, INTRO, PLAYING, SUCCESS, END, RATING
+    const [gameState, setGameState] = useState('REGISTRATION'); // REGISTRATION, INTRO, PLAYING, SUCCESS, END, RATING, COMPLETED
     const [player, setPlayer] = useState(null);
     const [score, setScore] = useState(0);
     const [gameProgress, setGameProgress] = useState(20); // 0 to 100
@@ -49,7 +50,6 @@ const SignalScoutScreen = ({ audioManager, onExit, isPaused: externalPaused = fa
     };
 
     const handleRegister = async (data) => {
-        // Prepare database record
         const playerRecord = {
             name: data.name,
             age: parseInt(data.age),
@@ -60,7 +60,6 @@ const SignalScoutScreen = ({ audioManager, onExit, isPaused: externalPaused = fa
             created_at: new Date().toISOString()
         };
 
-        // Insert into Supabase 'players' table and GET BACK THE ID
         const { data: insertedData, error } = await supabase
             .from('players')
             .insert([playerRecord])
@@ -69,7 +68,6 @@ const SignalScoutScreen = ({ audioManager, onExit, isPaused: externalPaused = fa
         if (error) throw error;
         if (!insertedData || insertedData.length === 0) throw new Error("No data returned");
 
-        // Save local state with THE ACTUAL DB ID
         setPlayer(insertedData[0]);
         setGameState('INTRO');
         if (audioManager) audioManager.playConfirm();
@@ -82,7 +80,6 @@ const SignalScoutScreen = ({ audioManager, onExit, isPaused: externalPaused = fa
         if (isSuccess && audioManager) audioManager.playVictory();
         else if (audioManager) audioManager.playGameOver();
 
-        // Save final stats to Supabase for this player
         if (player?.id) {
             await supabase
                 .from('players')
@@ -92,23 +89,28 @@ const SignalScoutScreen = ({ audioManager, onExit, isPaused: externalPaused = fa
     };
 
     const handleRatingSubmit = async (rating, userFeedback) => {
-        console.log('Saving rating:', { rating, feedback: userFeedback, playerId: player?.id });
         try {
             if (player?.id) {
-                const { error } = await supabase
+                await supabase
                     .from('players')
                     .update({ rating: rating, feedback: userFeedback })
                     .eq('id', player.id);
-                if (error) console.error('Rating save error:', error);
-                else console.log('Rating saved successfully!');
-            } else {
-                console.warn('No player ID found — rating not persisted to DB.');
             }
         } catch (err) {
-            console.error('Unexpected rating save error:', err);
+            console.error('Rating save error:', err);
         } finally {
-            setGameState('INTRO'); // Always return to intro
+            setGameState('COMPLETED');
         }
+    };
+
+    const restartGame = () => {
+        setGameState('REGISTRATION');
+        setPlayer(null);
+        setScore(0);
+        setMistakes(0);
+        setGameProgress(20);
+        setPeople([]);
+        if (audioManager) audioManager.playConfirm();
     };
 
     const togglePause = () => {
@@ -117,18 +119,12 @@ const SignalScoutScreen = ({ audioManager, onExit, isPaused: externalPaused = fa
         if (audioManager) audioManager.playPop();
     };
 
-    // Progress Logic (Instead of Timer)
     useEffect(() => {
         if (gameState !== 'PLAYING' || externalPaused || paused) return;
-
-        if (gameProgress >= 100) {
-            endGame(100);
-        } else if (gameProgress <= 0) {
-            endGame(0);
-        }
+        if (gameProgress >= 100) endGame(100);
+        else if (gameProgress <= 0) endGame(0);
     }, [gameProgress, gameState]);
 
-    // Spawning Logic
     useEffect(() => {
         if (gameState !== 'PLAYING' || externalPaused || paused) {
             if (spawnTimerRef.current) clearInterval(spawnTimerRef.current);
@@ -137,11 +133,9 @@ const SignalScoutScreen = ({ audioManager, onExit, isPaused: externalPaused = fa
 
         const spawnPair = () => {
              setPeople(currentPeople => {
-                // Only spawn a new pair if the screen is empty (or previous pair is leaving)
                 const centerOccupied = currentPeople.some(p => p.x > 10 && p.x < 90 && !p.isClicked);
                 if (centerOccupied || currentPeople.length >= 2) return currentPeople;
 
-                // Pick one RISK and one SAFE scenario
                 const riskScenarios = SCENARIOS.filter(s => s.type === 'risk' && !usedScenarioIdsRef.current.has(s.id));
                 const safeScenarios = SCENARIOS.filter(s => s.type === 'safe' && !usedScenarioIdsRef.current.has(s.id));
 
@@ -153,11 +147,9 @@ const SignalScoutScreen = ({ audioManager, onExit, isPaused: externalPaused = fa
                 const risk = riskScenarios[Math.floor(Math.random() * riskScenarios.length)];
                 const safe = safeScenarios[Math.floor(Math.random() * safeScenarios.length)];
 
-                // Tracking
                 usedScenarioIdsRef.current.add(risk.id);
                 usedScenarioIdsRef.current.add(safe.id);
 
-                // Random side for risk
                 const riskFromLeft = Math.random() > 0.5;
                 const lanes = [71, 74, 77].sort(() => Math.random() - 0.5);
 
@@ -168,7 +160,7 @@ const SignalScoutScreen = ({ audioManager, onExit, isPaused: externalPaused = fa
                         x: riskFromLeft ? -35 : 135,
                         y: lanes[0],
                         direction: riskFromLeft ? 1 : -1,
-                        baseSpeed: 0.045, // Unified speed for pairs to arrive together
+                        baseSpeed: 0.045,
                         asset: getStickmanAsset(risk.category),
                         isClicked: false
                     },
@@ -188,21 +180,17 @@ const SignalScoutScreen = ({ audioManager, onExit, isPaused: externalPaused = fa
             });
         };
 
-        if (people.length === 0) {
-            spawnPair();
-        }
-
+        if (people.length === 0) spawnPair();
         spawnTimerRef.current = setInterval(spawnPair, 1000); 
         return () => clearInterval(spawnTimerRef.current);
     }, [gameState, externalPaused, paused, people.length]);
 
-    // Movement Loop — also drives ambient running sound
     const stepCountRef = useRef(0);
     useEffect(() => {
         if (gameState !== 'PLAYING' || externalPaused || paused) return;
 
         const interval = setInterval(() => {
-            stepCountRef.current = (stepCountRef.current + 1) % 18; // every ~288ms
+            stepCountRef.current = (stepCountRef.current + 1) % 18;
             const shouldStep = stepCountRef.current === 0;
 
             setPeople(prev => {
@@ -226,18 +214,16 @@ const SignalScoutScreen = ({ audioManager, onExit, isPaused: externalPaused = fa
     }, [gameState, externalPaused, paused, audioManager]);
 
 
-    // Interaction Logic
     const handlePersonClick = (person) => {
         if (person.isClicked || gameState !== 'PLAYING' || externalPaused || paused) return;
 
-        // Immediately set WHOLE PAIR to clicked/leaving state + zoom sound
         setPeople(prev => prev.map(p => ({ ...p, isClicked: true })));
         if (audioManager) audioManager.playZoom();
 
         if (person.data.type === 'risk') {
             if (audioManager) audioManager.playDing();
             setScore(prev => prev + 100);
-            setGameProgress(prev => Math.min(100, prev + 12)); // GO UP
+            setGameProgress(prev => Math.min(100, prev + 12));
             setFeedback({
                 text: `Signal Found: ${person.data.clue}`,
                 desc: "This is a cry for help. Identifying these early is key to saving a life.",
@@ -250,7 +236,7 @@ const SignalScoutScreen = ({ audioManager, onExit, isPaused: externalPaused = fa
             if (audioManager) audioManager.playSad();
             setScore(prev => Math.max(0, prev - 50));
             setMistakes(prev => prev + 1);
-            setGameProgress(prev => Math.max(0, prev - 20)); // GO DOWN
+            setGameProgress(prev => Math.max(0, prev - 20));
             setFeedback({
                 text: "Normal Stress",
                 desc: "This person is expressing regular daily challenges, not a crisis.",
@@ -265,14 +251,10 @@ const SignalScoutScreen = ({ audioManager, onExit, isPaused: externalPaused = fa
     };
 
     return (
-        <div className="fixed inset-0 z-[100] bg-slate-900 flex flex-col overflow-hidden font-sans select-none">
+        <div className="fixed inset-0 z-[100] bg-slate-900 flex flex-col overflow-hidden font-sans select-none text-white">
             
-            {/* Conditional Rendering of Sub-Screens */}
             {gameState === 'REGISTRATION' && (
-                <RegistrationScreen 
-                    onRegister={handleRegister} 
-                    audioManager={audioManager} 
-                />
+                <RegistrationScreen onRegister={handleRegister} audioManager={audioManager} />
             )}
 
             {gameState === 'INTRO' && <TutorialScreen onStart={startGame} />}
@@ -302,10 +284,11 @@ const SignalScoutScreen = ({ audioManager, onExit, isPaused: externalPaused = fa
             )}
 
             {gameState === 'RATING' && (
-                <RatingScreen 
-                    onSubmit={handleRatingSubmit}
-                    audioManager={audioManager}
-                />
+                <RatingScreen onSubmit={handleRatingSubmit} audioManager={audioManager} />
+            )}
+
+            {gameState === 'COMPLETED' && (
+                <FinalCompletionScreen onRestart={restartGame} onExit={onExit} />
             )}
 
             {paused && <PauseOverlay onResume={togglePause} />}
