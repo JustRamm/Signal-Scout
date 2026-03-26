@@ -118,7 +118,7 @@ const GameView = ({
                             ${feedback.type === 'good' ? 'bg-teal-900/70 text-white border-teal-500/50' : 'bg-red-900/70 text-white border-red-500/50'}
                         `}
                         style={{ 
-                            left: '50%',
+                            left: '20%',
                             top: '50%',
                             transform: 'translate(-50%, -50%)',
                             width: 'clamp(220px, 70vw, 300px)',

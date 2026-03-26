@@ -40,6 +40,8 @@ const SignalScoutScreen = ({ audioManager, onExit, isPaused: externalPaused = fa
     const startGame = () => {
         setGameState('PLAYING');
         setScore(0);
+        setGameProgress(20);
+        setMistakes(0);
         setPeople([]);
         setPaused(false);
         usedScenarioIdsRef.current = new Set();
