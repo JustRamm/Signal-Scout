@@ -6,7 +6,6 @@ const SplashScreen = ({ onStart, audioManager, onLogoClick }) => {
     const [status, setStatus] = useState('Establishing connection...');
 
     useEffect(() => {
-        // ...Existing progress timer logic...
         const timer = setInterval(() => {
             setProgress(prev => {
                 if (prev >= 100) {
@@ -23,6 +22,12 @@ const SplashScreen = ({ onStart, audioManager, onLogoClick }) => {
 
         return () => clearInterval(timer);
     }, []);
+
+    useEffect(() => {
+        if (progress >= 100 && audioManager) {
+            audioManager.playMenuMusic(31);
+        }
+    }, [progress, audioManager]);
 
     const handleStart = () => {
         if (audioManager) {

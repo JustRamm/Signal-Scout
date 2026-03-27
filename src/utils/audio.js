@@ -405,7 +405,7 @@ class SoundEngine {
                     });
                 }
 
-                gain.gain.exponentialRampToValueAtTime(0.3, this.ctx.currentTime + 1.5);
+                gain.gain.exponentialRampToValueAtTime(0.9, this.ctx.currentTime + 1.5);
                 this.musicNodes = [{ source, gain }];
                 this.currentTrack = 'menu';
             }
@@ -464,7 +464,7 @@ class SoundEngine {
                 const gain = this.ctx.createGain();
 
                 gain.gain.setValueAtTime(0.001, this.ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.2, this.ctx.currentTime + 2);
+                gain.gain.exponentialRampToValueAtTime(0.4, this.ctx.currentTime + 2);
 
                 if (this.musicGeneration !== gen) {
                     source.stop();
@@ -489,7 +489,7 @@ class SoundEngine {
                 const gain = this.ctx.createGain();
 
                 gain.gain.setValueAtTime(0.001, this.ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.1, this.ctx.currentTime + 2);
+                gain.gain.exponentialRampToValueAtTime(0.25, this.ctx.currentTime + 2);
 
                 if (this.musicGeneration !== gen) {
                     source.stop();
