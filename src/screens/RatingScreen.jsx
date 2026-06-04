@@ -3,23 +3,15 @@ import React, { useState } from 'react';
 const RatingScreen = ({ onSubmit, audioManager }) => {
     const [rating, setRating] = useState(0);
     const [feedback, setFeedback] = useState('');
-    const [loading, setLoading] = useState(false);
 
     const handleStarClick = (num) => {
         setRating(num);
         if (audioManager) audioManager.playPop();
     };
 
-    const handleSend = async () => {
+    const handleSend = () => {
         if (rating === 0) return;
-        setLoading(true);
-        try {
-            await onSubmit(rating, feedback);
-        } catch (err) {
-            console.error(err);
-        } finally {
-            setLoading(false);
-        }
+        onSubmit(rating, feedback);
     };
 
     return (
@@ -56,11 +48,11 @@ const RatingScreen = ({ onSubmit, audioManager }) => {
 
                 <button
                     onClick={handleSend}
-                    disabled={rating === 0 || loading}
+                    disabled={rating === 0}
                     className="w-full py-4 bg-slate-900 hover:bg-slate-800 disabled:bg-slate-300 text-white rounded-2xl font-black uppercase tracking-widest text-sm transition-all flex items-center justify-center gap-2 shadow-lg"
                 >
-                    {loading ? 'Sending...' : 'Submit Feedback'}
-                    {!loading && <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>}
+                    Submit Feedback
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
                 </button>
             </div>
         </div>

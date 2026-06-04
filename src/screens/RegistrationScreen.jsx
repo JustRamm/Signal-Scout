@@ -16,7 +16,6 @@ const RegistrationScreen = ({ onRegister, audioManager }) => {
         fieldOfStudy: '',
         hasPriorTraining: false
     });
-    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
     const states = Object.keys(INSTITUTIONS).sort();
@@ -32,10 +31,9 @@ const RegistrationScreen = ({ onRegister, audioManager }) => {
 
     const isOther = formData.state === 'Other' || formData.university === 'Other University' || formData.college === 'Other';
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         setError(null);
-
 
         const finalState = formData.state === 'Other' ? formData.manualState : formData.state;
         const finalUniversity = formData.university === 'Other University' ? formData.manualUniversity : formData.university;
@@ -55,22 +53,13 @@ const RegistrationScreen = ({ onRegister, audioManager }) => {
             return;
         }
 
-        setLoading(true);
         if (audioManager) audioManager.playConfirm();
-
-        try {
-            await onRegister({
-                ...formData,
-                state: finalState,
-                university: finalUniversity,
-                college: finalCollege
-            });
-        } catch (err) {
-            setError("Failed to register. Please try again.");
-            console.error(err);
-        } finally {
-            setLoading(false);
-        }
+        onRegister({
+            ...formData,
+            state: finalState,
+            university: finalUniversity,
+            college: finalCollege
+        });
     };
 
     return (
@@ -262,11 +251,10 @@ const RegistrationScreen = ({ onRegister, audioManager }) => {
 
                     <button
                         type="submit"
-                        disabled={loading}
-                        className="w-full mt-2 py-4 bg-orange-500 hover:bg-orange-600 disabled:bg-slate-300 text-white rounded-2xl font-black uppercase tracking-widest text-sm shadow-xl shadow-orange-200 transition-all transform active:scale-95 flex items-center justify-center gap-2 group"
+                        className="w-full mt-2 py-4 bg-orange-500 hover:bg-orange-600 text-white rounded-2xl font-black uppercase tracking-widest text-sm shadow-xl shadow-orange-200 transition-all transform active:scale-95 flex items-center justify-center gap-2 group"
                     >
-                        {loading ? 'Processing...' : 'Complete Enrollment'}
-                        {!loading && <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>}
+                        Complete Enrollment
+                        <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                     </button>
                 </form>
 

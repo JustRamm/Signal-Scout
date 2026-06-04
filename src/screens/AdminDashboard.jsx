@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../utils/supabase';
 import { INSTITUTIONS } from '../data/institutions';
-
 const AdminDashboard = ({ onExit }) => {
     const [stats, setStats] = useState({
         totalPlayers: 0,
@@ -33,16 +31,15 @@ const AdminDashboard = ({ onExit }) => {
 
     const fetchStats = async () => {
         try {
-            const { data, error } = await supabase
-                .from('players')
-                .select('*')
-                .order('created_at', { ascending: false });
+            // Supabase removed; using mock data for UI display
+            const mockData = [
+                { id: 1, created_at: new Date().toISOString(), state: 'California', field_of_study: 'Computer Science', score: 85, age: 20, gender: 'Female', college: 'Stanford University', university: 'Stanford University', feedback: 'Great experience!', name: 'Alice', rating: 5 },
+                { id: 2, created_at: new Date(Date.now() - 86400000).toISOString(), state: 'New York', field_of_study: 'Psychology', score: 92, age: 22, gender: 'Male', college: 'NYU', university: 'NYU', feedback: 'Very insightful.', name: 'Bob', rating: 4 },
+                { id: 3, created_at: new Date(Date.now() - 86400000 * 2).toISOString(), state: 'Texas', field_of_study: 'Engineering', score: 78, age: 19, gender: 'Other', college: 'UT Austin', university: 'UT Austin', feedback: 'Helped a lot', name: 'Charlie', rating: 5 }
+            ];
 
-            if (error) throw error;
-            if (data) {
-                setAllData(data);
-                processStats(data, 'Overall', 'Overall', 'Overall');
-            }
+            setAllData(mockData);
+            processStats(mockData, 'Overall', 'Overall', 'Overall');
         } catch (err) {
             console.error('Error fetching admin stats:', err);
             setStats(prev => ({ ...prev, loading: false }));
