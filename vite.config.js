@@ -42,6 +42,8 @@ export default defineConfig({
         categories: ['games', 'education', 'health'],
       },
       workbox: {
+        maximumFileSizeToCacheInBytes: 100 * 1024 * 1024, // 100 MB limit for large audio files
+
         globPatterns: [
           '**/*.{js,css,html,ico,png,svg,jpg,jpeg,mp3,woff,woff2}',
         ],
