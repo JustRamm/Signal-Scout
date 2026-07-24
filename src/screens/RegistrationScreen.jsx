@@ -35,7 +35,6 @@ const RegistrationScreen = ({ onRegister, audioManager }) => {
         e.preventDefault();
         setError(null);
 
-
         const finalState = formData.state === 'Other' ? formData.manualState : formData.state;
         const finalUniversity = formData.university === 'Other University' ? formData.manualUniversity : formData.university;
         const finalCollege = (formData.college === 'Other' || formData.university === 'Other University' || formData.state === 'Other') 
@@ -55,7 +54,6 @@ const RegistrationScreen = ({ onRegister, audioManager }) => {
         }
 
         if (audioManager) audioManager.playConfirm();
-
         onRegister({
             ...formData,
             state: finalState,
@@ -262,8 +260,7 @@ const RegistrationScreen = ({ onRegister, audioManager }) => {
                 <div className="flex-shrink-0 px-6 sm:px-8 pb-6 sm:pb-8 pt-4 border-t border-slate-100/80">
                     <button
                         type="submit"
-                        form="enrollment-form"
-                        className="w-full py-4 bg-orange-500 hover:bg-orange-600 text-white rounded-2xl font-black uppercase tracking-widest text-sm shadow-xl shadow-orange-200 transition-all transform active:scale-95 flex items-center justify-center gap-2 group"
+                        className="w-full mt-2 py-4 bg-orange-500 hover:bg-orange-600 text-white rounded-2xl font-black uppercase tracking-widest text-sm shadow-xl shadow-orange-200 transition-all transform active:scale-95 flex items-center justify-center gap-2 group"
                     >
                         Complete Enrollment
                         <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>

@@ -42,6 +42,8 @@ export default defineConfig({
         categories: ['games', 'education', 'health'],
       },
       workbox: {
+        maximumFileSizeToCacheInBytes: 100 * 1024 * 1024, // 100 MB limit for large audio files
+
         globPatterns: [
           '**/*.{js,css,html,ico,png,svg,jpg,jpeg,mp3,woff,woff2}',
         ],
@@ -73,16 +75,7 @@ export default defineConfig({
               cacheableResponse: { statuses: [0, 200] },
             },
           },
-          {
-            urlPattern: /^https:\/\/.*\.supabase\.co\/.*/i,
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'supabase-cache',
-              networkTimeoutSeconds: 5,
-              expiration: { maxEntries: 20, maxAgeSeconds: 60 * 60 * 24 },
-              cacheableResponse: { statuses: [0, 200] },
-            },
-          },
+
         ],
       },
     }),

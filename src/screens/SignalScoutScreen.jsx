@@ -86,18 +86,9 @@ const SignalScoutScreen = ({ audioManager, onExit, isPaused: externalPaused = fa
 
         if (isSuccess && audioManager) audioManager.playVictory();
         else if (audioManager) audioManager.playGameOver();
-
-        // Update player state locally
-        if (player) {
-            setPlayer(prev => ({ ...prev, score, mistakes }));
-        }
     };
 
     const handleRatingSubmit = (rating, userFeedback) => {
-        // Store rating locally in player state
-        if (player) {
-            setPlayer(prev => ({ ...prev, rating, feedback: userFeedback }));
-        }
         setGameState('COMPLETED');
     };
 
