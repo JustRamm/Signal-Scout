@@ -3,12 +3,12 @@ import CitySquareScenery from '../components/CitySquareScenery';
 
 const FinalCompletionScreen = ({ onRestart, onExit }) => {
     return (
-        <div className="absolute inset-0 z-[500] bg-slate-900/98 backdrop-blur-3xl flex items-center justify-center p-6 text-center animate-fade-in">
+        <div className="absolute inset-0 z-[500] bg-slate-900/98 backdrop-blur-3xl flex items-start justify-center p-6 text-center animate-fade-in overflow-y-auto">
             <div className="absolute inset-0 z-0">
                 <CitySquareScenery />
             </div>
 
-            <div className="relative z-10 max-w-lg w-full bg-white rounded-[32px] p-8 sm:p-12 shadow-3xl border border-white/20 animate-scale-in">
+            <div className="relative z-10 max-w-lg w-full bg-white rounded-[32px] p-8 sm:p-12 shadow-3xl border border-white/20 animate-scale-in my-auto">
                 <div className="w-20 h-20 bg-emerald-500 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-xl shadow-emerald-500/20 rotate-3">
                     <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />

@@ -49,7 +49,7 @@ const SplashScreen = ({ onStart, audioManager, onLogoClick }) => {
     return (
         <div 
             onClick={handleSplashInteraction}
-            className="fixed inset-0 bg-[#020617] flex flex-col items-center justify-center overflow-hidden font-sans cursor-pointer"
+            className="fixed inset-0 bg-[#020617] flex flex-col items-center justify-center overflow-y-auto font-sans cursor-pointer"
         >
             {/* REAL Game Scenery Background */}
             <div className="absolute inset-0 z-0 opacity-40 pointer-events-none">

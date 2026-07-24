@@ -7,7 +7,7 @@ import GameOverScreen from './GameOverScreen';
 import PauseOverlay from '../components/PauseOverlay';
 import RatingScreen from './RatingScreen';
 import FinalCompletionScreen from './FinalCompletionScreen';
-import { supabase } from '../utils/supabase';
+
 
 const SignalScoutScreen = ({ audioManager, onExit, isPaused: externalPaused = false }) => {
     // Game State
@@ -60,7 +60,7 @@ const SignalScoutScreen = ({ audioManager, onExit, isPaused: externalPaused = fa
         usedScenarioIdsRef.current = new Set();
     };
 
-    const handleRegister = async (data) => {
+    const handleRegister = (data) => {
         const playerRecord = {
             name: data.name,
             age: parseInt(data.age),
@@ -75,47 +75,30 @@ const SignalScoutScreen = ({ audioManager, onExit, isPaused: externalPaused = fa
             created_at: new Date().toISOString()
         };
 
-        const { data: insertedData, error } = await supabase
-            .from('players')
-            .insert([playerRecord])
-            .select();
-
-        if (error) throw error;
-        if (!insertedData || insertedData.length === 0) throw new Error("No data returned");
-
-        setPlayer(insertedData[0]);
+        setPlayer(playerRecord);
         setGameState('INTRO');
         if (audioManager) audioManager.playConfirm();
     };
 
-    const endGame = async (finalProgress) => {
+    const endGame = (finalProgress) => {
         const isSuccess = finalProgress >= 100;
         setGameState(isSuccess ? 'SUCCESS' : 'END');
 
         if (isSuccess && audioManager) audioManager.playVictory();
         else if (audioManager) audioManager.playGameOver();
 
-        if (player?.id) {
-            await supabase
-                .from('players')
-                .update({ score, mistakes })
-                .eq('id', player.id);
+        // Update player state locally
+        if (player) {
+            setPlayer(prev => ({ ...prev, score, mistakes }));
         }
     };
 
-    const handleRatingSubmit = async (rating, userFeedback) => {
-        try {
-            if (player?.id) {
-                await supabase
-                    .from('players')
-                    .update({ rating: rating, feedback: userFeedback })
-                    .eq('id', player.id);
-            }
-        } catch (err) {
-            console.error('Rating save error:', err);
-        } finally {
-            setGameState('COMPLETED');
+    const handleRatingSubmit = (rating, userFeedback) => {
+        // Store rating locally in player state
+        if (player) {
+            setPlayer(prev => ({ ...prev, rating, feedback: userFeedback }));
         }
+        setGameState('COMPLETED');
     };
 
     const restartGame = () => {
