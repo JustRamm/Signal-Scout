@@ -260,6 +260,7 @@ const RegistrationScreen = ({ onRegister, audioManager }) => {
                 <div className="flex-shrink-0 px-6 sm:px-8 pb-6 sm:pb-8 pt-4 border-t border-slate-100/80">
                     <button
                         type="submit"
+                        form="enrollment-form"
                         className="w-full mt-2 py-4 bg-orange-500 hover:bg-orange-600 text-white rounded-2xl font-black uppercase tracking-widest text-sm shadow-xl shadow-orange-200 transition-all transform active:scale-95 flex items-center justify-center gap-2 group"
                     >
                         Complete Enrollment
