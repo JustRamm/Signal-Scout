@@ -15,8 +15,8 @@ const RatingScreen = ({ onSubmit, audioManager }) => {
     };
 
     return (
-        <div className="absolute inset-0 z-[600] bg-slate-900/40 backdrop-blur-md flex items-center justify-center p-6 animate-fade-in">
-            <div className="w-full max-w-md bg-white rounded-[32px] p-8 shadow-3xl text-center transform animate-scale-in">
+        <div className="absolute inset-0 z-[600] bg-slate-900/40 backdrop-blur-md flex items-start justify-center p-6 animate-fade-in overflow-y-auto">
+            <div className="w-full max-w-md bg-white rounded-[32px] p-8 shadow-3xl text-center transform animate-scale-in my-auto">
                 <div className="mb-6">
                     <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <svg className="w-10 h-10 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">

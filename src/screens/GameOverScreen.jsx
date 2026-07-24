@@ -3,11 +3,11 @@ import CitySquareScenery from '../components/CitySquareScenery';
 
 const GameOverScreen = ({ score, isSuccess, onPlayAgain, onNext, onExit }) => {
     return (
-        <div className="absolute inset-0 z-[300] bg-slate-900/95 backdrop-blur-xl flex items-center justify-center p-4 sm:p-6">
+        <div className="absolute inset-0 z-[300] bg-slate-900/95 backdrop-blur-xl flex items-start justify-center p-4 sm:p-6 overflow-y-auto">
             <div className="absolute inset-0 z-0">
                 <CitySquareScenery />
             </div>
-            <div className="max-w-md w-full bg-white rounded-[24px] sm:rounded-[32px] p-6 sm:p-8 md:p-10 text-center shadow-2xl animate-scale-in border-b-8 border-slate-900/10">
+            <div className="max-w-md w-full bg-white rounded-[24px] sm:rounded-[32px] p-6 sm:p-8 md:p-10 text-center shadow-2xl animate-scale-in border-b-8 border-slate-900/10 my-auto">
                 <div className="w-12 h-12 sm:w-16 sm:h-16 bg-slate-100 rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-inner border border-slate-200">
                     <img src="/brand/logo.svg" alt="Logo" className="w-8 h-8 sm:w-12 sm:h-12" />
                 </div>

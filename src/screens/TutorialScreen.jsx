@@ -3,13 +3,13 @@ import CitySquareScenery from '../components/CitySquareScenery';
 
 const TutorialScreen = ({ onStart }) => {
     return (
-        <div className="absolute inset-0 z-[300] bg-slate-900/95 backdrop-blur-xl flex items-center justify-center p-4 sm:p-6">
+        <div className="absolute inset-0 z-[300] bg-slate-900/95 backdrop-blur-xl flex items-start justify-center p-4 sm:p-6 overflow-y-auto">
             {/* Real Backdrop */}
             <div className="absolute inset-0 z-0">
                 <CitySquareScenery />
             </div>
 
-            <div className="bg-white rounded-[24px] sm:rounded-[32px] max-w-lg w-full p-6 sm:p-8 md:p-10 shadow-2xl relative overflow-hidden animate-scale-in text-center">
+            <div className="bg-white rounded-[24px] sm:rounded-[32px] max-w-lg w-full p-6 sm:p-8 md:p-10 shadow-2xl relative overflow-hidden animate-scale-in text-center my-auto">
 
                 <div className="relative z-10">
                     <div className="w-12 h-12 sm:w-16 sm:h-16 bg-orange-500 rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-lg rotate-3">

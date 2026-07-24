@@ -37,7 +37,7 @@ function App() {
   }, []);
 
   return (
-    <div className="w-full h-screen overflow-hidden bg-slate-900 flex items-center justify-center">
+    <div className="w-full min-h-screen relative bg-slate-900">
       {showAdmin && (
           <AdminDashboard onExit={() => setShowAdmin(false)} />
       )}
